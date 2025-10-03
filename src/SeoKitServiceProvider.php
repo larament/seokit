@@ -36,8 +36,6 @@ final class SeoKitServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->register(SitemapServiceProvider::class);
-
         $this->app->singleton(
             MetaTags::class,
             fn () => new MetaTags(config('seokit.defaults'))
@@ -51,21 +49,6 @@ final class SeoKitServiceProvider extends PackageServiceProvider
         $this->app->singleton(
             TwitterCards::class,
             fn () => new TwitterCards(config('seokit.twitter.defaults'))
-        );
-
-        $this->app->singleton(
-            Analytics::class,
-            fn () => new Analytics(config('seokit.analytics'))
-        );
-
-        $this->app->singleton(
-            RobotsTxt::class,
-            fn () => new RobotsTxt(config('seokit.robots'))
-        );
-
-        $this->app->singleton(
-            ContentAnalysis::class,
-            fn () => new ContentAnalysis(config('seokit.content_analysis'))
         );
     }
 
