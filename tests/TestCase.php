@@ -26,7 +26,7 @@ class TestCase extends Orchestra
 
         config()->set('seokit.auto_title_from_url', false);
         config()->set('database.default', 'testing');
-        
+
         // Use array cache driver to avoid database table issues in tests
         config()->set('cache.default', 'array');
 
