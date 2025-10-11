@@ -28,9 +28,8 @@ final class SeoKitServiceProvider extends PackageServiceProvider
 
     public function bootingPackage(): void
     {
-        // seoKit blade directive
         Blade::directive('seoKit', function (bool $minify = false) {
-            return "<?php echo app(\Larament\SeoKit\SeoKitManager::class)->render($minify); ?>";
+            return "<?php echo app(\Larament\SeoKit\SeoKitManager::class)->toHtml($minify); ?>";
         });
     }
 
@@ -49,6 +48,11 @@ final class SeoKitServiceProvider extends PackageServiceProvider
         $this->app->singleton(
             TwitterCards::class,
             fn () => new TwitterCards(config('seokit.twitter.defaults'))
+        );
+
+        $this->app->singleton(
+            JsonLD::class,
+            fn () => new JsonLD(config('seokit.json_ld.defaults'))
         );
     }
 

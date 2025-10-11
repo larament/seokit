@@ -5,6 +5,12 @@ declare(strict_types=1);
 // config for Larament/SeoKit
 return [
     /*
+     * The table name to be used by the Seo model and migration.
+     * You can change this to any table name you prefer.
+     */
+    'table_name' => 'seokit',
+
+    /*
     |--------------------------------------------------------------------------
     | Auto Title From URL
     |--------------------------------------------------------------------------
@@ -85,6 +91,7 @@ return [
             'site_name' => env('APP_NAME', 'Laravel'),
             'type' => 'website',
             'url' => null, // Use null for `URL::current()`, 'full' for `URL::full()`, or false to remove
+            'locale' => 'en_US',
         ],
     ],
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Larament\SeoKit;
 
-use Illuminate\Support\Facades\URL;
 use Larament\SeoKit\Support\Util;
 
 final class MetaTags
@@ -17,11 +16,9 @@ final class MetaTags
 
     private array $languages = [];
 
-    public function __construct(private array $config)
-    {
-        $this->setDefaultValues();
-    }
-
+    /**
+     * Add a meta tag to the page.
+     */
     public function addMeta(string $name, string $content): self
     {
         $this->meta[$name] = e($content);
@@ -29,6 +26,9 @@ final class MetaTags
         return $this;
     }
 
+    /**
+     * Remove a meta tag by name.
+     */
     public function removeMeta(string $name): self
     {
         unset($this->meta[$name]);
@@ -36,6 +36,9 @@ final class MetaTags
         return $this;
     }
 
+    /**
+     * Add a link tag to the page.
+     */
     public function addLink(string $rel, string $href): self
     {
         $this->links[$rel] = e($href);
@@ -43,6 +46,9 @@ final class MetaTags
         return $this;
     }
 
+    /**
+     * Remove a link tag by rel attribute.
+     */
     public function removeLink(string $rel): self
     {
         unset($this->links[$rel]);
@@ -50,13 +56,19 @@ final class MetaTags
         return $this;
     }
 
+    /**
+     * Add an alternate language link tag.
+     */
     public function addLanguage(string $hreflang, string $href): self
     {
-        $this->languages[$hreflang] = e($href);
+        $this->languages[$hreflang] = Util::cleanString($href);
 
         return $this;
     }
 
+    /**
+     * Remove an alternate language link tag.
+     */
     public function removeLanguage(string $hreflang): self
     {
         unset($this->languages[$hreflang]);
@@ -64,20 +76,29 @@ final class MetaTags
         return $this;
     }
 
+    /**
+     * Set the page title.
+     */
     public function title(string $title): self
     {
-        $this->title = Util::formatTitle(
+        $this->title = Util::affixTitle(
             Util::cleanString($title)
         );
 
         return $this;
     }
 
+    /**
+     * Set the meta description.
+     */
     public function description(string $description): self
     {
         return $this->addMeta('description', $description);
     }
 
+    /**
+     * Set the meta keywords.
+     */
     public function keywords(array $keywords): self
     {
         return $this->addMeta('keywords', implode(', ', $keywords));
@@ -87,7 +108,6 @@ final class MetaTags
      * Set the robots.
      *
      * Supported values:
-     *
      * - `index`
      * - `noindex`
      * - `follow`
@@ -101,26 +121,41 @@ final class MetaTags
         return $this->addMeta('robots', is_array($robots) ? implode(', ', $robots) : $robots);
     }
 
+    /**
+     * Set the canonical URL.
+     */
     public function canonical(string $url): self
     {
         return $this->addLink('canonical', $url);
     }
 
+    /**
+     * Set the AMP HTML URL.
+     */
     public function ampHtml(string $url): self
     {
         return $this->addLink('amphtml', $url);
     }
 
+    /**
+     * Set the previous page URL (for pagination).
+     */
     public function prev(string $url, bool $condition = true): self
     {
         return $condition ? $this->addLink('prev', $url) : $this;
     }
 
+    /**
+     * Set the next page URL (for pagination).
+     */
     public function next(string $url, bool $condition = true): self
     {
         return $condition ? $this->addLink('next', $url) : $this;
     }
 
+    /**
+     * Return the meta tags as an array.
+     */
     public function toArray(): array
     {
         return [
@@ -130,7 +165,10 @@ final class MetaTags
         ];
     }
 
-    public function render(bool $minify = false): string
+    /**
+     * Render the meta tags to HTML.
+     */
+    public function toHtml(bool $minify = false): string
     {
         $output = [
             "<title>{$this->title}</title>",
@@ -149,39 +187,5 @@ final class MetaTags
         }
 
         return implode($minify ? '' : PHP_EOL, $output);
-    }
-
-    /**
-     * Set default values from the package configuration.
-     * Merges provided config with default values.
-     */
-    private function setDefaultValues(): void
-    {
-        $config = array_merge([
-            'title' => null,
-            'before_title' => null,
-            'after_title' => null,
-            'title_separator' => ' - ',
-            'description' => null,
-            'robots' => 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
-        ], $this->config);
-
-        $this->title(Util::getTitleFromUrl() ?? $config['title']);
-
-        if ($config['description']) {
-            $this->description($config['description']);
-        }
-
-        match ($config['canonical']) {
-            null => $this->canonical(URL::current()),
-            'full' => $this->canonical(URL::full()),
-            default => null,
-        };
-
-        if ($config['robots']) {
-            $this->robots($config['robots']);
-        }
-
-        $this->config = $config;
     }
 }

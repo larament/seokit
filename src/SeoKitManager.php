@@ -4,23 +4,26 @@ declare(strict_types=1);
 
 namespace Larament\SeoKit;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Traits\Macroable;
+use Larament\SeoKit\Data\SeoData;
+use Larament\SeoKit\Support\Util;
 
 final class SeoKitManager
 {
     use Macroable;
 
-    private Model $model;
-
     public function __construct(
         private MetaTags $meta,
         private OpenGraph $opengraph,
         private TwitterCards $twitter,
-        private Analytics $analytics,
-        private RobotsTxt $robots,
-        private ContentAnalysis $contentAnalysis,
-    ) {}
+        private JsonLD $jsonld,
+    ) {
+        $this->setDefaultMetaTags();
+        $this->setDefaultOpenGraph();
+        $this->setDefaultTwitter();
+        $this->setDefaultJsonLd();
+    }
 
     public function meta(): MetaTags
     {
@@ -37,19 +40,46 @@ final class SeoKitManager
         return $this->twitter;
     }
 
-    public function analytics(): Analytics
+    public function jsonld(): JsonLD
     {
-        return $this->analytics;
+        return $this->jsonld;
     }
 
-    public function robots(): RobotsTxt
+    /**
+     * Set the SEO data for the manager from a SeoData object.
+     */
+    public function fromSeoData(SeoData $data): static
     {
-        return $this->robots;
-    }
+        $this->meta
+            ->title($data->title)
+            ->description($data->description);
 
-    public function contentAnalysis(): ContentAnalysis
-    {
-        return $this->contentAnalysis;
+        if ($data->robots) {
+            $this->meta->robots($data->robots);
+        }
+        if ($data->canonical) {
+            $this->meta->canonical($data->canonical);
+        }
+
+        $this->opengraph
+            ->title($data->og_title ?: $data->title)
+            ->description($data->og_description ?: $data->description);
+        if ($data->og_image) {
+            $this->opengraph->image($data->og_image);
+        }
+
+        $this->twitter
+            ->title($data->og_title ?: $data->title)
+            ->description($data->og_description ?: $data->description);
+        if ($twImage = $data->twitter_image ?? $data->og_image) {
+            $this->twitter->image($twImage);
+        }
+
+        if ($data->structured_data) {
+            $this->jsonld->add($data->structured_data);
+        }
+
+        return $this;
     }
 
     /**
@@ -77,7 +107,7 @@ final class SeoKitManager
     }
 
     /**
-     * Set the image for OG and Twitter.
+     * Set the image for Open Graph and Twitter.
      */
     public function image(string $image): static
     {
@@ -87,27 +117,110 @@ final class SeoKitManager
         return $this;
     }
 
-    public function forModel(Model $model): static
+    /**
+     * Set the canonical URL for the meta tags and Open Graph.
+     */
+    public function canonical(string $canonical): static
     {
-        $this->model = $model;
+        $this->meta->canonical($canonical);
+        $this->opengraph->url($canonical);
 
         return $this;
     }
 
-    public function render(bool $minify = false): string
+    /**
+     * Render the SEO tags to HTML.
+     */
+    public function toHtml(bool $minify = false): string
     {
         $output = [
-            $this->meta->render($minify),
+            $this->meta->toHtml($minify),
         ];
 
         if (config('seokit.opengraph.enabled')) {
-            $output[] = $this->opengraph->render($minify);
+            $output[] = $this->opengraph->toHtml($minify);
         }
 
         if (config('seokit.twitter.enabled')) {
-            $output[] = $this->twitter->render($minify);
+            $output[] = $this->twitter->toHtml($minify);
+        }
+
+        if (config('seokit.json_ld.enabled')) {
+            $output[] = $this->jsonld->toHtml($minify);
         }
 
         return implode($minify ? '' : PHP_EOL, $output);
+    }
+
+    /**
+     * Set the default meta tags.
+     */
+    private function setDefaultMetaTags(): void
+    {
+        $meta = config('seokit.defaults');
+        $this->meta->title(config('seokit.auto_title_from_url') ? Util::getTitleFromUrl() : $meta['title']);
+
+        if ($meta['description']) {
+            $this->meta->description($meta['description']);
+        }
+
+        if ($meta['robots']) {
+            $this->meta->robots($meta['robots']);
+        }
+
+        match ($meta['canonical'] ?? null) {
+            null => $this->meta->canonical(URL::current()),
+            'full' => $this->meta->canonical(URL::full()),
+            default => null,
+        };
+
+    }
+
+    /**
+     * Set the default open graph.
+     */
+    private function setDefaultOpenGraph(): void
+    {
+        $opengraph = config('seokit.opengraph.defaults');
+        $this->opengraph
+            ->type($opengraph['type'])
+            ->siteName($opengraph['site_name'])
+            ->locale($opengraph['locale']);
+
+        match ($opengraph['url'] ?? null) {
+            null => $this->opengraph->url(URL::current()),
+            'full' => $this->opengraph->url(URL::full()),
+            default => null,
+        };
+
+    }
+
+    /**
+     * Set the default twitter.
+     */
+    private function setDefaultTwitter(): void
+    {
+        $twitter = config('seokit.twitter.defaults');
+        if ($twitter['card']) {
+            $this->twitter->card($twitter['card']);
+        }
+        if ($twitter['site']) {
+            $this->twitter->site($twitter['site']);
+        }
+        if ($twitter['creator']) {
+            $this->twitter->creator($twitter['creator']);
+        }
+
+    }
+
+    /**
+     * Set the default json ld.
+     */
+    private function setDefaultJsonLd(): void
+    {
+        $jsonld = config('seokit.json_ld.defaults');
+        if ($jsonld) {
+            $this->jsonld->add($jsonld);
+        }
     }
 }

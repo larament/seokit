@@ -21,13 +21,16 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
+        // import the config file
+        $app['config']->set('seokit', require __DIR__.'/../config/seokit.php');
+
+        config()->set('seokit.auto_title_from_url', false);
         config()->set('database.default', 'testing');
 
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/database/migrations') as $migration) {
+        foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__.'/../database/migrations') as $migration) {
             (include $migration->getRealPath())->up();
-         }
-         */
+        }
+
     }
 
     protected function getPackageProviders($app)

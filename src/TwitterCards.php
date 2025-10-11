@@ -8,11 +8,6 @@ final class TwitterCards
 {
     private array $properties = [];
 
-    public function __construct(private array $config)
-    {
-        $this->prepareDefaults();
-    }
-
     public function add(string $property, string|int $value): self
     {
         $this->properties[$property] = e($value);
@@ -32,15 +27,15 @@ final class TwitterCards
         return $this->add('title', $title);
     }
 
-    public function type(string $type): self
+    public function card(string $card): self
     {
-        $validTypes = ['summary', 'summary_large_image', 'app', 'player'];
+        $validCards = ['summary', 'summary_large_image', 'app', 'player'];
 
-        if (! in_array($type, $validTypes)) {
-            $type = 'summary';
+        if (! in_array($card, $validCards)) {
+            $card = 'summary';
         }
 
-        return $this->add('card', $type);
+        return $this->add('card', $card);
     }
 
     public function site(string $username): self
@@ -81,7 +76,7 @@ final class TwitterCards
         return $this->properties;
     }
 
-    public function render(bool $minify = false): string
+    public function toHtml(bool $minify = false): string
     {
         $output = [];
 
@@ -90,28 +85,5 @@ final class TwitterCards
         }
 
         return implode($minify ? '' : PHP_EOL, $output);
-    }
-
-    private function prepareDefaults(): void
-    {
-        $config = array_merge([
-            'card' => 'summary_large_image',
-            'site' => null,
-            'creator' => null,
-        ], $this->config);
-
-        if ($config['card']) {
-            $this->type($config['card']);
-        }
-
-        if ($config['site']) {
-            $this->site($config['site']);
-        }
-
-        if ($config['creator']) {
-            $this->creator($config['creator']);
-        }
-
-        $this->config = $config;
     }
 }
