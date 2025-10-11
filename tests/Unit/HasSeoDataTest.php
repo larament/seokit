@@ -9,9 +9,9 @@ use Larament\SeoKit\Concerns\HasSeoData;
 use Larament\SeoKit\Data\SeoData;
 use Larament\SeoKit\Facades\SeoKit;
 
-beforeEach(function () {
+beforeEach(function (): void {
     // Create test table
-    Schema::create('test_articles', function (Blueprint $table) {
+    Schema::create('test_articles', function (Blueprint $table): void {
         $table->id();
         $table->string('title');
         $table->text('content')->nullable();
@@ -44,11 +44,11 @@ beforeEach(function () {
     };
 });
 
-afterEach(function () {
+afterEach(function (): void {
     Schema::dropIfExists('test_articles');
 });
 
-it('prepares seo tags from toSeoData method', function () {
+it('prepares seo tags from toSeoData method', function (): void {
     $article = $this->model->create(['title' => 'Article']);
 
     $article->prepareSeoTags();
@@ -59,7 +59,7 @@ it('prepares seo tags from toSeoData method', function () {
         ->and($html)->toContain('Test Description');
 });
 
-it('handles empty seo data gracefully', function () {
+it('handles empty seo data gracefully', function (): void {
     $model = new class extends Model
     {
         use HasSeoData;
@@ -82,7 +82,7 @@ it('handles empty seo data gracefully', function () {
     expect($html)->not->toContain('Test Title');
 });
 
-it('passes correct seo data to manager', function () {
+it('passes correct seo data to manager', function (): void {
     $model = new class extends Model
     {
         use HasSeoData;
@@ -116,7 +116,7 @@ it('passes correct seo data to manager', function () {
         ->and($html)->toContain('https://example.com/image.jpg');
 });
 
-it('can use dynamic data from model attributes', function () {
+it('can use dynamic data from model attributes', function (): void {
     $model = new class extends Model
     {
         use HasSeoData;
@@ -150,7 +150,7 @@ it('can use dynamic data from model attributes', function () {
         ->and($html)->toContain('https://example.com/featured.jpg');
 });
 
-it('works with complex seo data including structured data', function () {
+it('works with complex seo data including structured data', function (): void {
     $model = new class extends Model
     {
         use HasSeoData;
@@ -185,7 +185,7 @@ it('works with complex seo data including structured data', function () {
         ->and($html)->toContain('Article Headline');
 });
 
-it('prepares seo tags with all possible fields', function () {
+it('prepares seo tags with all possible fields', function (): void {
     $model = new class extends Model
     {
         use HasSeoData;

@@ -11,9 +11,9 @@ use Larament\SeoKit\Facades\SeoKit;
 use Larament\SeoKit\Models\Seo;
 use Larament\SeoKit\Support\Util;
 
-beforeEach(function () {
+beforeEach(function (): void {
     // Create test tables
-    Schema::create('test_posts', function (Blueprint $table) {
+    Schema::create('test_posts', function (Blueprint $table): void {
         $table->id();
         $table->string('title');
         $table->timestamps();
@@ -30,19 +30,19 @@ beforeEach(function () {
     };
 });
 
-afterEach(function () {
+afterEach(function (): void {
     Schema::dropIfExists('test_posts');
     Cache::flush();
 });
 
-it('has seo morphOne relationship', function () {
+it('has seo morphOne relationship', function (): void {
     $relation = $this->testModel->seo();
 
     expect($relation)->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\MorphOne::class)
         ->and($relation->getRelated())->toBeInstanceOf(Seo::class);
 });
 
-it('prepares seo tags when seo data exists', function () {
+it('prepares seo tags when seo data exists', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -60,7 +60,7 @@ it('prepares seo tags when seo data exists', function () {
         ->and($html)->toContain('https://example.com/test');
 });
 
-it('does not prepare seo tags when seo data is null', function () {
+it('does not prepare seo tags when seo data is null', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     // No SEO data attached
@@ -72,7 +72,7 @@ it('does not prepare seo tags when seo data is null', function () {
     expect($html)->toContain('<title>');
 });
 
-it('retrieves seo data from cache', function () {
+it('retrieves seo data from cache', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -91,7 +91,7 @@ it('retrieves seo data from cache', function () {
         ->and($data1['description'])->toBe('Cached Description');
 });
 
-it('returns null when seo relationship does not exist', function () {
+it('returns null when seo relationship does not exist', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $result = $post->seoData();
@@ -99,7 +99,7 @@ it('returns null when seo relationship does not exist', function () {
     expect($result)->toBeNull();
 });
 
-it('checks if model is cornerstone content', function () {
+it('checks if model is cornerstone content', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -110,7 +110,7 @@ it('checks if model is cornerstone content', function () {
     expect($post->isCornerstone())->toBeTrue();
 });
 
-it('returns false when is_cornerstone is not set', function () {
+it('returns false when is_cornerstone is not set', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -120,7 +120,7 @@ it('returns false when is_cornerstone is not set', function () {
     expect($post->isCornerstone())->toBeFalse();
 });
 
-it('returns false when is_cornerstone is false', function () {
+it('returns false when is_cornerstone is false', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -131,13 +131,13 @@ it('returns false when is_cornerstone is false', function () {
     expect($post->isCornerstone())->toBeFalse();
 });
 
-it('returns false when seo data is null', function () {
+it('returns false when seo data is null', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     expect($post->isCornerstone())->toBeFalse();
 });
 
-it('clears cache when model is saved', function () {
+it('clears cache when model is saved', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -156,7 +156,7 @@ it('clears cache when model is saved', function () {
     expect($freshData['title'])->toBe('Updated Title');
 });
 
-it('clears cache when model is deleted', function () {
+it('clears cache when model is deleted', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([
@@ -175,7 +175,7 @@ it('clears cache when model is deleted', function () {
     expect(Cache::has($cacheKey))->toBeFalse();
 });
 
-it('generates correct cache key for seo data', function () {
+it('generates correct cache key for seo data', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create(['title' => 'Test']);
@@ -187,7 +187,7 @@ it('generates correct cache key for seo data', function () {
     expect(Cache::has($expectedKey))->toBeTrue();
 });
 
-it('prepares seo tags with complex data', function () {
+it('prepares seo tags with complex data', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
     $post->seo()->create([

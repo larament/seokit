@@ -25,7 +25,7 @@ final class Seo extends Model
 
     protected static function booted(): void
     {
-        self::saved(function (Seo $seo) {
+        self::saved(function (Seo $seo): void {
             Cache::forget(Util::modelCacheKey($seo->model));
         });
     }

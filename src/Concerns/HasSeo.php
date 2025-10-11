@@ -61,7 +61,7 @@ trait HasSeo
      */
     protected static function bootHasSeo(): void
     {
-        static::deleted(function (Model $model) {
+        static::deleted(function (Model $model): void {
             $model->seo()->delete();
             Cache::forget(Util::modelCacheKey($model));
         });

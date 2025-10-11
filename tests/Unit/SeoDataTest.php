@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Larament\SeoKit\Data\SeoData;
 
-it('can be created with all fields', function () {
+it('can be created with all fields', function (): void {
     $seoData = new SeoData(
         title: 'Test Title',
         description: 'Test Description',
@@ -28,7 +28,7 @@ it('can be created with all fields', function () {
         ->and($seoData->structured_data)->toBe(['@type' => 'WebSite', 'name' => 'Test Site']);
 });
 
-it('can be created with minimal fields', function () {
+it('can be created with minimal fields', function (): void {
     $seoData = new SeoData(
         title: 'Test Title',
         description: 'Test Description'
@@ -45,7 +45,7 @@ it('can be created with minimal fields', function () {
         ->and($seoData->structured_data)->toBeNull();
 });
 
-it('can be created with no fields', function () {
+it('can be created with no fields', function (): void {
     $seoData = new SeoData;
 
     expect($seoData->title)->toBe('')
@@ -59,7 +59,7 @@ it('can be created with no fields', function () {
         ->and($seoData->structured_data)->toBeNull();
 });
 
-it('can be created from array with all fields', function () {
+it('can be created from array with all fields', function (): void {
     $data = [
         'title' => 'Array Title',
         'description' => 'Array Description',
@@ -85,7 +85,7 @@ it('can be created from array with all fields', function () {
         ->and($seoData->structured_data)->toBe(['@type' => 'Article', 'headline' => 'Article']);
 });
 
-it('can be created from array with partial fields', function () {
+it('can be created from array with partial fields', function (): void {
     $data = [
         'title' => 'Partial Title',
         'og_image' => 'https://example.com/image.jpg',
@@ -104,7 +104,7 @@ it('can be created from array with partial fields', function () {
         ->and($seoData->structured_data)->toBeNull();
 });
 
-it('can be created from empty array', function () {
+it('can be created from empty array', function (): void {
     $seoData = SeoData::fromArray([]);
 
     expect($seoData->title)->toBe('')
@@ -118,14 +118,14 @@ it('can be created from empty array', function () {
         ->and($seoData->structured_data)->toBeNull();
 });
 
-it('is readonly and cannot be modified after creation', function () {
+it('is readonly and cannot be modified after creation', function (): void {
     $seoData = new SeoData(title: 'Original Title');
 
-    expect(fn () => $seoData->title = 'Modified Title')
+    expect(fn (): string => $seoData->title = 'Modified Title')
         ->toThrow(Error::class);
 });
 
-it('handles special characters in string fields', function () {
+it('handles special characters in string fields', function (): void {
     $seoData = new SeoData(
         title: 'Title with & "quotes" and <HTML>',
         description: 'Description with special chars: & < > " \''
@@ -135,7 +135,7 @@ it('handles special characters in string fields', function () {
         ->and($seoData->description)->toBe('Description with special chars: & < > " \'');
 });
 
-it('handles UTF-8 characters in fields', function () {
+it('handles UTF-8 characters in fields', function (): void {
     $seoData = new SeoData(
         title: '测试标题 Título Заголовок',
         description: 'Ümlaut ñ characters 日本語'
@@ -145,7 +145,7 @@ it('handles UTF-8 characters in fields', function () {
         ->and($seoData->description)->toBe('Ümlaut ñ characters 日本語');
 });
 
-it('fromArray handles extra fields gracefully', function () {
+it('fromArray handles extra fields gracefully', function (): void {
     $data = [
         'title' => 'Test Title',
         'extra_field' => 'Should be ignored',
@@ -158,7 +158,7 @@ it('fromArray handles extra fields gracefully', function () {
         ->and($seoData->description)->toBe('');
 });
 
-it('structured_data can be complex nested array', function () {
+it('structured_data can be complex nested array', function (): void {
     $complexData = [
         '@context' => 'https://schema.org',
         '@type' => 'Article',

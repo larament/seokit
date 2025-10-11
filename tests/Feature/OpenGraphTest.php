@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Larament\SeoKit\Enums\OpenGraphType;
 use Larament\SeoKit\Facades\SeoKit;
 
-it('can set and get the Open Graph type', function () {
+it('can set and get the Open Graph type', function (): void {
     $og = SeoKit::opengraph();
     $og->type('website');
 
@@ -13,7 +13,7 @@ it('can set and get the Open Graph type', function () {
     expect($html)->toContain('property="og:type" content="website"');
 });
 
-it('can set type with enum', function () {
+it('can set type with enum', function (): void {
     $og = SeoKit::opengraph();
     $og->type(OpenGraphType::Article);
 
@@ -21,7 +21,7 @@ it('can set type with enum', function () {
     expect($html)->toContain('property="og:type" content="article"');
 });
 
-it('can set and get the Open Graph URL', function () {
+it('can set and get the Open Graph URL', function (): void {
     $og = SeoKit::opengraph();
     $og->url('https://example.com');
 
@@ -29,7 +29,7 @@ it('can set and get the Open Graph URL', function () {
     expect($html)->toContain('property="og:url" content="https://example.com"');
 });
 
-it('can set and get the Open Graph title', function () {
+it('can set and get the Open Graph title', function (): void {
     $og = SeoKit::opengraph();
     $og->title('Test Title');
 
@@ -37,7 +37,7 @@ it('can set and get the Open Graph title', function () {
     expect($html)->toContain('property="og:title" content="Test Title"');
 });
 
-it('can set and get the Open Graph description', function () {
+it('can set and get the Open Graph description', function (): void {
     $og = SeoKit::opengraph();
     $og->description('Test Description');
 
@@ -45,7 +45,7 @@ it('can set and get the Open Graph description', function () {
     expect($html)->toContain('property="og:description" content="Test Description"');
 });
 
-it('can set site name', function () {
+it('can set site name', function (): void {
     $og = SeoKit::opengraph();
     $og->siteName('Test Site');
 
@@ -53,7 +53,7 @@ it('can set site name', function () {
     expect($html)->toContain('property="og:site_name" content="Test Site"');
 });
 
-it('can set locale', function () {
+it('can set locale', function (): void {
     $og = SeoKit::opengraph();
     $og->locale('en_US');
 
@@ -61,7 +61,7 @@ it('can set locale', function () {
     expect($html)->toContain('property="og:locale" content="en_US"');
 });
 
-it('can add locale alternate', function () {
+it('can add locale alternate', function (): void {
     $og = SeoKit::opengraph();
     $og->localeAlternate(['es_ES', 'fr_FR']);
 
@@ -70,7 +70,7 @@ it('can add locale alternate', function () {
         ->toContain('property="og:locale:alternate" content="fr_FR"');
 });
 
-it('can conditionally add locale alternate', function () {
+it('can conditionally add locale alternate', function (): void {
     $og = SeoKit::opengraph();
     $og->localeAlternate([]); // Empty array should not add anything
 
@@ -78,7 +78,7 @@ it('can conditionally add locale alternate', function () {
     expect($html)->not->toContain('property="og:locale:alternate"');
 });
 
-it('can set determiner', function () {
+it('can set determiner', function (): void {
     $og = SeoKit::opengraph();
 
     // Valid determiners
@@ -94,7 +94,7 @@ it('can set determiner', function () {
     }
 });
 
-it('does not set invalid determiner', function () {
+it('does not set invalid determiner', function (): void {
     $og = SeoKit::opengraph();
     $og->determiner('invalid'); // This should be ignored
 
@@ -102,7 +102,7 @@ it('does not set invalid determiner', function () {
     expect($html)->not->toContain('property="og:determiner"');
 });
 
-it('can add an image with all properties', function () {
+it('can add an image with all properties', function (): void {
     $og = SeoKit::opengraph();
     $og->image(
         'https://example.com/image.jpg',
@@ -122,7 +122,7 @@ it('can add an image with all properties', function () {
         ->toContain('property="og:image:alt" content="Image Alt Text"');
 });
 
-it('can add a video with all properties', function () {
+it('can add a video with all properties', function (): void {
     $og = SeoKit::opengraph();
     $og->video(
         'https://example.com/video.mp4',
@@ -140,7 +140,7 @@ it('can add a video with all properties', function () {
         ->toContain('property="og:video:height" content="720"');
 });
 
-it('can add an audio with all properties', function () {
+it('can add an audio with all properties', function (): void {
     $og = SeoKit::opengraph();
     $og->audio(
         'https://example.com/audio.mp3',
@@ -154,7 +154,7 @@ it('can add an audio with all properties', function () {
         ->toContain('property="og:audio:type" content="audio/mpeg"');
 });
 
-it('can set article properties', function () {
+it('can set article properties', function (): void {
     $og = SeoKit::opengraph();
     $og->article(
         '2023-01-01T00:00:00Z',
@@ -175,7 +175,7 @@ it('can set article properties', function () {
         ->toContain('property="article:tag" content="tag2"');
 });
 
-it('can set profile properties', function () {
+it('can set profile properties', function (): void {
     $og = SeoKit::opengraph();
     $og->profile('John', 'Doe', 'johndoe', 'male');
 
@@ -187,7 +187,7 @@ it('can set profile properties', function () {
         ->toContain('property="profile:gender" content="male"');
 });
 
-it('can set book properties', function () {
+it('can set book properties', function (): void {
     $og = SeoKit::opengraph();
     $og->book(['Author 1', 'Author 2'], '123456789', '2023-01-01', ['fiction', 'adventure']);
 
@@ -200,7 +200,7 @@ it('can set book properties', function () {
         ->toContain('property="book:tag" content="adventure"');
 });
 
-it('can add a custom property', function () {
+it('can add a custom property', function (): void {
     $og = SeoKit::opengraph();
     $og->add('custom:property', 'custom value');
 
@@ -208,7 +208,7 @@ it('can add a custom property', function () {
     expect($html)->toContain('property="custom:property" content="custom value"');
 });
 
-it('can conditionally add a custom property', function () {
+it('can conditionally add a custom property', function (): void {
     $og = SeoKit::opengraph();
     $og->addWhen(true, 'custom:property', 'custom value');
 
@@ -216,7 +216,7 @@ it('can conditionally add a custom property', function () {
     expect($html)->toContain('property="custom:property" content="custom value"');
 });
 
-it('does not add property when condition is false', function () {
+it('does not add property when condition is false', function (): void {
     $og = SeoKit::opengraph();
     $og->addWhen(false, 'custom:property', 'custom value');
 
@@ -224,7 +224,7 @@ it('does not add property when condition is false', function () {
     expect($html)->not->toContain('property="custom:property"');
 });
 
-it('can remove a property', function () {
+it('can remove a property', function (): void {
     $og = SeoKit::opengraph();
     $og->add('custom:property', 'custom value');
     expect($og->has('custom:property'))->toBeTrue();
@@ -233,20 +233,20 @@ it('can remove a property', function () {
     expect($og->has('custom:property'))->toBeFalse();
 });
 
-it('can get a property value', function () {
+it('can get a property value', function (): void {
     $og = SeoKit::opengraph();
     $og->add('custom:property', 'custom value');
 
     expect($og->get('custom:property'))->toBe('custom value');
 });
 
-it('returns null for non-existent property', function () {
+it('returns null for non-existent property', function (): void {
     $og = SeoKit::opengraph();
 
     expect($og->get('nonexistent:property'))->toBeNull();
 });
 
-it('converts to array properly', function () {
+it('converts to array properly', function (): void {
     $og = SeoKit::opengraph();
     $og->title('Test Title');
     $og->add('custom:property', 'custom value');
@@ -256,7 +256,7 @@ it('converts to array properly', function () {
         ->toHaveKey('custom:property', 'custom value');
 });
 
-it('can clear all properties', function () {
+it('can clear all properties', function (): void {
     $og = SeoKit::opengraph();
     $og->title('Test Title');
     $og->add('custom:property', 'custom value');
@@ -267,7 +267,7 @@ it('can clear all properties', function () {
     expect($og->toArray())->toBeEmpty();
 });
 
-it('generates HTML with proper formatting', function () {
+it('generates HTML with proper formatting', function (): void {
     $og = SeoKit::opengraph();
     $og->title('Test Title');
     $og->description('Test Description');
@@ -279,7 +279,7 @@ it('generates HTML with proper formatting', function () {
         ->toContain('<meta property="og:type" content="website" />');
 });
 
-it('generates minified HTML when requested', function () {
+it('generates minified HTML when requested', function (): void {
     $og = SeoKit::opengraph();
     $og->title('Test Title');
     $og->description('Test Description');
@@ -288,7 +288,7 @@ it('generates minified HTML when requested', function () {
     expect($html)->not->toContain("\n"); // No newlines in minified output
 });
 
-it('properly escapes special characters in content', function () {
+it('properly escapes special characters in content', function (): void {
     $og = SeoKit::opengraph();
     $og->title('Title with & "Quotes" and <HTML>');
     $og->description('Description with special chars: & < > " \'');
@@ -298,7 +298,7 @@ it('properly escapes special characters in content', function () {
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
-it('handles empty values gracefully', function () {
+it('handles empty values gracefully', function (): void {
     $og = SeoKit::opengraph();
     $og->title('');
     $og->description('');
@@ -308,7 +308,7 @@ it('handles empty values gracefully', function () {
     expect($html)->toBeString();
 });
 
-it('enforces strict typing for methods', function () {
+it('enforces strict typing for methods', function (): void {
     $og = SeoKit::opengraph();
 
     // This should pass with strict typing
@@ -320,7 +320,7 @@ it('enforces strict typing for methods', function () {
         ->toContain('property="og:description" content="Valid Description"');
 });
 
-it('handles multiple images correctly', function () {
+it('handles multiple images correctly', function (): void {
     $og = SeoKit::opengraph();
     $og->image('https://example.com/image1.jpg');
     $og->add('og:image', 'https://example.com/image2.jpg');
@@ -329,7 +329,7 @@ it('handles multiple images correctly', function () {
     expect($html)->toContain('https://example.com/image1.jpg');
 });
 
-it('validates URLs in url property', function () {
+it('validates URLs in url property', function (): void {
     $og = SeoKit::opengraph();
     $og->url('https://example.com/page');
 
@@ -337,7 +337,7 @@ it('validates URLs in url property', function () {
     expect($html)->toContain('property="og:url" content="https://example.com/page"');
 });
 
-it('can set multiple authors for article', function () {
+it('can set multiple authors for article', function (): void {
     $og = SeoKit::opengraph();
     $og->article(
         '2023-01-01T00:00:00Z',
@@ -354,7 +354,7 @@ it('can set multiple authors for article', function () {
         ->toContain('property="article:author" content="Author 3"');
 });
 
-it('handles UTF-8 characters correctly', function () {
+it('handles UTF-8 characters correctly', function (): void {
     $og = SeoKit::opengraph();
     $og->title('测试标题 Título Заголовок');
     $og->description('Ümlaut ñ characters 日本語');
@@ -364,7 +364,7 @@ it('handles UTF-8 characters correctly', function () {
         ->toContain('Ümlaut ñ characters 日本語');
 });
 
-it('can set music song properties', function () {
+it('can set music song properties', function (): void {
     $og = SeoKit::opengraph();
     $og->musicSong(
         duration: 240,
@@ -381,7 +381,7 @@ it('can set music song properties', function () {
         ->toContain('property="music:album:track" content="3"');
 });
 
-it('can set music album properties', function () {
+it('can set music album properties', function (): void {
     $og = SeoKit::opengraph();
     $og->musicAlbum(
         song: ['https://example.com/song1', 'https://example.com/song2'],
@@ -394,7 +394,7 @@ it('can set music album properties', function () {
         ->toContain('property="music:release_date" content="2023-01-01"');
 });
 
-it('can set music playlist properties', function () {
+it('can set music playlist properties', function (): void {
     $og = SeoKit::opengraph();
     $og->musicPlaylist(
         song: ['https://example.com/song1'],
@@ -405,7 +405,7 @@ it('can set music playlist properties', function () {
     expect($html)->toContain('property="og:type" content="music.playlist"');
 });
 
-it('can set music radio station properties', function () {
+it('can set music radio station properties', function (): void {
     $og = SeoKit::opengraph();
     $og->musicRadioStation(
         creator: ['https://example.com/station']
@@ -415,7 +415,7 @@ it('can set music radio station properties', function () {
     expect($html)->toContain('property="og:type" content="music.radio_station"');
 });
 
-it('can set video movie properties', function () {
+it('can set video movie properties', function (): void {
     $og = SeoKit::opengraph();
     $og->videoMovie(
         actor: ['https://example.com/actor1'],
@@ -433,7 +433,7 @@ it('can set video movie properties', function () {
         ->toContain('property="video:release_date" content="2023-01-01"');
 });
 
-it('can set video episode properties', function () {
+it('can set video episode properties', function (): void {
     $og = SeoKit::opengraph();
     $og->videoEpisode(
         series: 'https://example.com/series',
@@ -448,7 +448,7 @@ it('can set video episode properties', function () {
         ->toContain('property="video:duration" content="2700"');
 });
 
-it('can set video tv show properties', function () {
+it('can set video tv show properties', function (): void {
     $og = SeoKit::opengraph();
     $og->videoTvShow(
         actor: ['https://example.com/actor'],
@@ -460,7 +460,7 @@ it('can set video tv show properties', function () {
     expect($html)->toContain('property="og:type" content="video.tv_show"');
 });
 
-it('can set video other properties', function () {
+it('can set video other properties', function (): void {
     $og = SeoKit::opengraph();
     $og->videoOther(
         actor: ['https://example.com/actor'],

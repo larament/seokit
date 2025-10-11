@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Larament\SeoKit\Facades\SeoKit;
 
-it('can add a schema to the collection', function () {
+it('can add a schema to the collection', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@context' => 'https://schema.org',
@@ -19,7 +19,7 @@ it('can add a schema to the collection', function () {
         ->toContain('"name":"Larament.com"');
 });
 
-it('can remove a schema by index', function () {
+it('can remove a schema by index', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add(['@type' => 'WebSite', 'name' => 'Larament.com']);
     $jsonld->add(['@type' => 'WebSite', 'name' => 'Digimax.it.com']);
@@ -35,7 +35,7 @@ it('can remove a schema by index', function () {
     expect(array_values($array)[0]['name'])->toBe('Digimax.it.com');
 });
 
-it('can add a WebSite schema', function () {
+it('can add a WebSite schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->website([
         'name' => "Raziul's Blog",
@@ -50,7 +50,7 @@ it('can add a WebSite schema', function () {
         ->and($schema['url'])->toBe('https://raziul.dev');
 });
 
-it('can add an Organization schema', function () {
+it('can add an Organization schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->organization([
         'name' => 'Larament',
@@ -65,7 +65,7 @@ it('can add an Organization schema', function () {
         ->and($schema['url'])->toBe('https://larament.com');
 });
 
-it('can add a Person schema', function () {
+it('can add a Person schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->person([
         'name' => 'Raziul Islam',
@@ -80,7 +80,7 @@ it('can add a Person schema', function () {
         ->and($schema['jobTitle'])->toBe('Developer');
 });
 
-it('can add an Article schema', function () {
+it('can add an Article schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->article([
         'headline' => 'Larament is a complete SEO package for Laravel.',
@@ -95,7 +95,7 @@ it('can add an Article schema', function () {
         ->and($schema['description'])->toBe('Test Description');
 });
 
-it('can add a BlogPosting schema', function () {
+it('can add a BlogPosting schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->blogPosting([
         'headline' => 'Test Blog Post',
@@ -110,7 +110,7 @@ it('can add a BlogPosting schema', function () {
         ->and($schema['description'])->toBe('Test Blog Description');
 });
 
-it('can add a Product schema', function () {
+it('can add a Product schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->product([
         'name' => 'Test Product',
@@ -130,7 +130,7 @@ it('can add a Product schema', function () {
         ->and($schema['description'])->toBe('Test Product Description');
 });
 
-it('can add a LocalBusiness schema', function () {
+it('can add a LocalBusiness schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->localBusiness([
         'name' => 'Digimax',
@@ -147,7 +147,7 @@ it('can add a LocalBusiness schema', function () {
         ->and($schema['telephone'])->toBe('+8801782802304');
 });
 
-it('can clear all schemas', function () {
+it('can clear all schemas', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add(['@type' => 'WebSite', 'name' => 'Test Site']);
 
@@ -157,7 +157,7 @@ it('can clear all schemas', function () {
     expect($jsonld->toArray())->toBeEmpty();
 });
 
-it('converts to array properly', function () {
+it('converts to array properly', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add(['@type' => 'WebSite', 'name' => 'Test Site']);
     $jsonld->add(['@type' => 'Organization', 'name' => 'Test Org']);
@@ -168,7 +168,7 @@ it('converts to array properly', function () {
         ->and($array[1]['name'])->toBe('Test Org');
 });
 
-it('generates HTML with script tags properly', function () {
+it('generates HTML with script tags properly', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@context' => 'https://schema.org',
@@ -182,14 +182,14 @@ it('generates HTML with script tags properly', function () {
         ->toContain('</script>');
 });
 
-it('returns empty string when no schemas exist', function () {
+it('returns empty string when no schemas exist', function (): void {
     $jsonld = SeoKit::jsonld();
 
     $html = $jsonld->toHtml();
     expect($html)->toBe('');
 });
 
-it('generates minified HTML when requested', function () {
+it('generates minified HTML when requested', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@context' => 'https://schema.org',
@@ -202,7 +202,7 @@ it('generates minified HTML when requested', function () {
     expect($html)->not->toContain("\n");
 });
 
-it('properly handles special characters in JSON', function () {
+it('properly handles special characters in JSON', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@type' => 'WebSite',
@@ -215,7 +215,7 @@ it('properly handles special characters in JSON', function () {
     expect($html)->toContain('"name":"Test & Site with \\"Quotes\\" and <HTML>"');
 });
 
-it('handles UTF-8 characters correctly', function () {
+it('handles UTF-8 characters correctly', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@type' => 'WebSite',
@@ -228,7 +228,7 @@ it('handles UTF-8 characters correctly', function () {
         ->toContain('Ümlaut ñ characters 日本語');
 });
 
-it('handles nested arrays and objects', function () {
+it('handles nested arrays and objects', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@type' => 'Product',
@@ -247,7 +247,7 @@ it('handles nested arrays and objects', function () {
     expect($array[0]['offers']['availability']['name'])->toBe('InStock');
 });
 
-it('can add multiple schemas and maintain order', function () {
+it('can add multiple schemas and maintain order', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->website(['name' => 'Site 1']);
     $jsonld->organization(['name' => 'Org 1']);
@@ -260,7 +260,7 @@ it('can add multiple schemas and maintain order', function () {
         ->and($array[2]['@type'])->toBe('Person');
 });
 
-it('can add BreadcrumbList schema', function () {
+it('can add BreadcrumbList schema', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@type' => 'BreadcrumbList',
@@ -285,7 +285,7 @@ it('can add BreadcrumbList schema', function () {
         ->and($array[0]['itemListElement'])->toHaveCount(2);
 });
 
-it('validates JSON structure', function () {
+it('validates JSON structure', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([
         '@context' => 'https://schema.org',
@@ -303,7 +303,7 @@ it('validates JSON structure', function () {
         ->and($decoded['@type'])->toBe('WebSite');
 });
 
-it('handles empty schema gracefully', function () {
+it('handles empty schema gracefully', function (): void {
     $jsonld = SeoKit::jsonld();
     $jsonld->add([]);
 

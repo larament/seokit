@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Larament\SeoKit\Facades\SeoKit;
 
-it('can set and get the Twitter card title', function () {
+it('can set and get the Twitter card title', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('Test Title');
 
@@ -12,7 +12,7 @@ it('can set and get the Twitter card title', function () {
     expect($html)->toContain('name="twitter:title" content="Test Title"');
 });
 
-it('can set the card type with valid options', function () {
+it('can set the card type with valid options', function (): void {
     $twitter = SeoKit::twitter();
 
     $validCards = ['summary', 'summary_large_image', 'app', 'player'];
@@ -24,7 +24,7 @@ it('can set the card type with valid options', function () {
     }
 });
 
-it('sets default card type for invalid options', function () {
+it('sets default card type for invalid options', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->card('invalid_card_type'); // Should default to 'summary'
 
@@ -32,7 +32,7 @@ it('sets default card type for invalid options', function () {
     expect($html)->toContain('name="twitter:card" content="summary"');
 });
 
-it('can set the site username', function () {
+it('can set the site username', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->site('@example');
 
@@ -40,7 +40,7 @@ it('can set the site username', function () {
     expect($html)->toContain('name="twitter:site" content="@example"');
 });
 
-it('can set the creator username', function () {
+it('can set the creator username', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->creator('@creator');
 
@@ -48,7 +48,7 @@ it('can set the creator username', function () {
     expect($html)->toContain('name="twitter:creator" content="@creator"');
 });
 
-it('can set the description', function () {
+it('can set the description', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->description('Test Description');
 
@@ -56,7 +56,7 @@ it('can set the description', function () {
     expect($html)->toContain('name="twitter:description" content="Test Description"');
 });
 
-it('can set the image and optional alt text', function () {
+it('can set the image and optional alt text', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->image('https://example.com/image.jpg', 'Image Alt Text');
 
@@ -65,7 +65,7 @@ it('can set the image and optional alt text', function () {
         ->toContain('name="twitter:image:alt" content="Image Alt Text"');
 });
 
-it('can set image without alt text', function () {
+it('can set image without alt text', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->image('https://example.com/image.jpg');
 
@@ -74,7 +74,7 @@ it('can set image without alt text', function () {
         ->not->toContain('name="twitter:image:alt"');
 });
 
-it('can set player properties', function () {
+it('can set player properties', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->player('https://example.com/player', 400, 300);
 
@@ -84,7 +84,7 @@ it('can set player properties', function () {
         ->toContain('name="twitter:player:height" content="300"');
 });
 
-it('can add a custom property', function () {
+it('can add a custom property', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->add('custom_property', 'custom_value');
 
@@ -92,7 +92,7 @@ it('can add a custom property', function () {
     expect($html)->toContain('name="twitter:custom_property" content="custom_value"');
 });
 
-it('can remove a property', function () {
+it('can remove a property', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->add('custom_property', 'custom_value');
 
@@ -104,7 +104,7 @@ it('can remove a property', function () {
     expect($array)->not->toHaveKey('custom_property');
 });
 
-it('converts to array properly', function () {
+it('converts to array properly', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('Test Title');
     $twitter->description('Test Description');
@@ -116,7 +116,7 @@ it('converts to array properly', function () {
         ->toHaveKey('site', '@example');
 });
 
-it('generates HTML with proper formatting', function () {
+it('generates HTML with proper formatting', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('Test Title');
     $twitter->description('Test Description');
@@ -128,7 +128,7 @@ it('generates HTML with proper formatting', function () {
         ->toContain('<meta name="twitter:card" content="summary" />');
 });
 
-it('generates minified HTML when requested', function () {
+it('generates minified HTML when requested', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('Test Title');
     $twitter->description('Test Description');
@@ -137,7 +137,7 @@ it('generates minified HTML when requested', function () {
     expect($html)->not->toContain("\n"); // No newlines in minified output
 });
 
-it('properly escapes special characters in content', function () {
+it('properly escapes special characters in content', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('Title with & "Quotes" and <HTML>');
     $twitter->description('Description with special chars: & < > " \'');
@@ -147,7 +147,7 @@ it('properly escapes special characters in content', function () {
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
-it('handles empty values gracefully', function () {
+it('handles empty values gracefully', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('');
     $twitter->description('');
@@ -157,7 +157,7 @@ it('handles empty values gracefully', function () {
     expect($html)->toBeString();
 });
 
-it('enforces strict typing for methods', function () {
+it('enforces strict typing for methods', function (): void {
     $twitter = SeoKit::twitter();
 
     // This should pass with strict typing
@@ -169,7 +169,7 @@ it('enforces strict typing for methods', function () {
         ->toContain('name="twitter:description" content="Valid Description"');
 });
 
-it('handles UTF-8 characters correctly', function () {
+it('handles UTF-8 characters correctly', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('测试标题 Título Заголовок');
     $twitter->description('Ümlaut ñ characters 日本語');
@@ -179,7 +179,7 @@ it('handles UTF-8 characters correctly', function () {
         ->toContain('Ümlaut ñ characters 日本語');
 });
 
-it('adds @ prefix to site username if missing', function () {
+it('adds @ prefix to site username if missing', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->site('example'); // Without @ prefix
 
@@ -188,7 +188,7 @@ it('adds @ prefix to site username if missing', function () {
     expect($array)->toHaveKey('site');
 });
 
-it('adds @ prefix to creator username if missing', function () {
+it('adds @ prefix to creator username if missing', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->creator('creator'); // Without @ prefix
 
@@ -197,7 +197,7 @@ it('adds @ prefix to creator username if missing', function () {
     expect($array)->toHaveKey('creator');
 });
 
-it('can clear all properties', function () {
+it('can clear all properties', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->title('Test Title');
     $twitter->description('Test Description');

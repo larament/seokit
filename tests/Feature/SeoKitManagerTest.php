@@ -11,33 +11,33 @@ use Larament\SeoKit\OpenGraph;
 use Larament\SeoKit\SeoKitManager;
 use Larament\SeoKit\TwitterCards;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config(['seokit.opengraph.enabled' => true]);
     config(['seokit.twitter.enabled' => true]);
     config(['seokit.jsonld.enabled' => true]);
 });
 
-it('can be resolved from the container', function () {
+it('can be resolved from the container', function (): void {
     expect(SeoKit::getFacadeRoot())->toBeInstanceOf(SeoKitManager::class);
 });
 
-it('provides access to meta tags service', function () {
+it('provides access to meta tags service', function (): void {
     expect(SeoKit::meta())->toBeInstanceOf(MetaTags::class);
 });
 
-it('provides access to open graph service', function () {
+it('provides access to open graph service', function (): void {
     expect(SeoKit::opengraph())->toBeInstanceOf(OpenGraph::class);
 });
 
-it('provides access to twitter cards service', function () {
+it('provides access to twitter cards service', function (): void {
     expect(SeoKit::twitter())->toBeInstanceOf(TwitterCards::class);
 });
 
-it('provides access to json ld service', function () {
+it('provides access to json ld service', function (): void {
     expect(SeoKit::jsonld())->toBeInstanceOf(JsonLD::class);
 });
 
-it('can set title across all services', function () {
+it('can set title across all services', function (): void {
     SeoKit::title('Test Title');
 
     $metaHtml = SeoKit::meta()->toHtml();
@@ -49,7 +49,7 @@ it('can set title across all services', function () {
         ->and($twitterHtml)->toContain('name="twitter:title" content="Test Title"');
 });
 
-it('can set description across all services', function () {
+it('can set description across all services', function (): void {
     SeoKit::description('Test Description');
 
     $metaHtml = SeoKit::meta()->toHtml();
@@ -61,7 +61,7 @@ it('can set description across all services', function () {
         ->and($twitterHtml)->toContain('name="twitter:description" content="Test Description"');
 });
 
-it('can set image for open graph and twitter', function () {
+it('can set image for open graph and twitter', function (): void {
     SeoKit::image('https://example.com/image.jpg');
 
     $ogHtml = SeoKit::opengraph()->toHtml();
@@ -71,7 +71,7 @@ it('can set image for open graph and twitter', function () {
         ->and($twitterHtml)->toContain('name="twitter:image" content="https://example.com/image.jpg"');
 });
 
-it('can set canonical for meta tags and open graph', function () {
+it('can set canonical for meta tags and open graph', function (): void {
     SeoKit::canonical('https://example.com/canonical-page');
 
     $metaHtml = SeoKit::meta()->toHtml();
@@ -81,7 +81,7 @@ it('can set canonical for meta tags and open graph', function () {
         ->and($ogHtml)->toContain('property="og:url" content="https://example.com/canonical-page"');
 });
 
-it('can render all SEO tags to HTML', function () {
+it('can render all SEO tags to HTML', function (): void {
     SeoKit::meta()->title('Test Title');
     SeoKit::meta()->description('Test Description');
     SeoKit::opengraph()->type('website');
@@ -104,7 +104,7 @@ it('can render all SEO tags to HTML', function () {
         ->toContain('<script type="application/ld+json">');
 });
 
-it('can set SEO data from SeoData object', function () {
+it('can set SEO data from SeoData object', function (): void {
     $seoData = new SeoData(
         title: 'SEO Title',
         description: 'SEO Description',
@@ -146,7 +146,7 @@ it('can set SEO data from SeoData object', function () {
     expect($jsonldArray[0]['name'])->toBe('Test Site');
 });
 
-it('uses fallbacks when og fields are not provided in SeoData', function () {
+it('uses fallbacks when og fields are not provided in SeoData', function (): void {
     $seoData = new SeoData(
         title: 'Main Title',
         description: 'Main Description',
@@ -166,7 +166,7 @@ it('uses fallbacks when og fields are not provided in SeoData', function () {
         ->toContain('content="Main Description"'); // Uses description as fallback
 });
 
-it('respects config settings when rendering HTML', function () {
+it('respects config settings when rendering HTML', function (): void {
     // We'll test this by temporarily changing config
     config(['seokit.opengraph.enabled' => false]);
     config(['seokit.twitter.enabled' => false]);
@@ -183,7 +183,7 @@ it('respects config settings when rendering HTML', function () {
         ->not->toContain('<script type="application/ld+json">'); // JSON-LD should be disabled
 });
 
-it('generates minified HTML when requested', function () {
+it('generates minified HTML when requested', function (): void {
     SeoKit::meta()->title('Test Title');
     SeoKit::opengraph()->type('website');
     SeoKit::twitter()->card('summary');
@@ -198,7 +198,7 @@ it('generates minified HTML when requested', function () {
     expect($html)->not->toContain("\n");
 });
 
-it('properly handles special characters across all services', function () {
+it('properly handles special characters across all services', function (): void {
     SeoKit::title('Title with & "Quotes" and <HTML>');
     SeoKit::description('Description with special chars: & < > " \'');
 
@@ -216,7 +216,7 @@ it('properly handles special characters across all services', function () {
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
-it('handles UTF-8 characters across all services', function () {
+it('handles UTF-8 characters across all services', function (): void {
     SeoKit::title('测试标题 Título Заголовок');
     SeoKit::description('Ümlaut ñ characters 日本語');
 
@@ -234,7 +234,7 @@ it('handles UTF-8 characters across all services', function () {
         ->toContain('Ümlaut ñ characters 日本語');
 });
 
-it('can set complex SeoData with all fields', function () {
+it('can set complex SeoData with all fields', function (): void {
     $seoData = new SeoData(
         title: 'Main Title',
         description: 'Main Description',
@@ -266,7 +266,7 @@ it('can set complex SeoData with all fields', function () {
         ->toContain('"@type":"Article"');
 });
 
-it('can chain multiple method calls fluently', function () {
+it('can chain multiple method calls fluently', function (): void {
     $result = SeoKit::title('Test Title')
         ->description('Test Description')
         ->image('https://example.com/image.jpg');
@@ -274,7 +274,7 @@ it('can chain multiple method calls fluently', function () {
     expect($result)->toBeInstanceOf(SeoKitManager::class);
 });
 
-it('handles SeoData with minimal required fields', function () {
+it('handles SeoData with minimal required fields', function (): void {
     $seoData = new SeoData(
         title: 'Minimal Title',
         description: 'Minimal Description'
@@ -288,7 +288,7 @@ it('handles SeoData with minimal required fields', function () {
         ->toBeString();
 });
 
-it('can override SeoData values after setting', function () {
+it('can override SeoData values after setting', function (): void {
     $seoData = new SeoData(
         title: 'Initial Title',
         description: 'Initial Description'
@@ -301,7 +301,7 @@ it('can override SeoData values after setting', function () {
     expect($metaHtml)->toContain('<title>Overridden Title</title>');
 });
 
-it('sets default meta with auto title from URL disabled', function () {
+it('sets default meta with auto title from URL disabled', function (): void {
     config(['seokit.auto_title_from_url' => false]);
     config(['seokit.defaults.title' => 'Default Title']);
     config(['seokit.defaults.description' => 'Default Description']);
@@ -314,7 +314,7 @@ it('sets default meta with auto title from URL disabled', function () {
         ->toContain('index,follow');
 });
 
-it('sets default meta with auto title from URL enabled', function () {
+it('sets default meta with auto title from URL enabled', function (): void {
     config(['seokit.auto_title_from_url' => true]);
     config(['seokit.defaults.title' => null]);
     config(['app.name' => 'My App']);
@@ -324,7 +324,7 @@ it('sets default meta with auto title from URL enabled', function () {
     expect($html)->toContain('My App');
 });
 
-it('sets default canonical to current URL when null', function () {
+it('sets default canonical to current URL when null', function (): void {
     config(['seokit.defaults.canonical' => null]);
 
     URL::shouldReceive('current')
@@ -335,7 +335,7 @@ it('sets default canonical to current URL when null', function () {
     expect($html)->toContain('https://example.com/page');
 });
 
-it('sets default canonical to full URL when configured', function () {
+it('sets default canonical to full URL when configured', function (): void {
     config(['seokit.defaults.canonical' => 'full']);
 
     URL::shouldReceive('full')->once()
@@ -348,7 +348,7 @@ it('sets default canonical to full URL when configured', function () {
     expect($html)->toContain('https://example.com/page?query=value');
 });
 
-it('does not set canonical when explicitly configured as other value', function () {
+it('does not set canonical when explicitly configured as other value', function (): void {
     config(['seokit.defaults.canonical' => false]);
     config(['seokit.opengraph.enabled' => true]);
     config(['seokit.opengraph.defaults.url' => false]);
@@ -358,7 +358,7 @@ it('does not set canonical when explicitly configured as other value', function 
     expect($html)->not->toContain('rel="canonical"');
 });
 
-it('sets default opengraph URL to current when null', function () {
+it('sets default opengraph URL to current when null', function (): void {
     config(['seokit.opengraph.enabled' => true]);
     config(['seokit.opengraph.defaults.url' => null]);
 
@@ -370,7 +370,7 @@ it('sets default opengraph URL to current when null', function () {
     expect($html)->toContain('https://example.com/page');
 });
 
-it('sets default opengraph URL to full when configured', function () {
+it('sets default opengraph URL to full when configured', function (): void {
     config(['seokit.opengraph.enabled' => true]);
     config(['seokit.opengraph.defaults.url' => 'full']);
 
@@ -384,7 +384,7 @@ it('sets default opengraph URL to full when configured', function () {
     expect($html)->toContain('https://example.com/page?query=value');
 });
 
-it('sets default json ld from config', function () {
+it('sets default json ld from config', function (): void {
     config(['seokit.jsonld.enabled' => true]);
     config(['seokit.json_ld.defaults' => [
         '@context' => 'https://schema.org',
@@ -400,7 +400,7 @@ it('sets default json ld from config', function () {
         ->toContain('"name":"My Company"');
 });
 
-it('blade directive renders seo tags', function () {
+it('blade directive renders seo tags', function (): void {
     SeoKit::title('Blade Test');
 
     $blade = Illuminate\Support\Facades\Blade::compileString('@seoKit');
@@ -408,7 +408,7 @@ it('blade directive renders seo tags', function () {
     expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml');
 });
 
-it('blade directive accepts minify parameter', function () {
+it('blade directive accepts minify parameter', function (): void {
     $blade = Illuminate\Support\Facades\Blade::compileString('@seoKit(true)');
 
     expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(1)');

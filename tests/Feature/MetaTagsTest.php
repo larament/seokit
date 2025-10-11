@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Larament\SeoKit\Facades\SeoKit;
 
-it('can set and get a title', function () {
+it('can set and get a title', function (): void {
     $meta = SeoKit::meta();
     $meta->title('Test Title');
 
@@ -12,7 +12,7 @@ it('can set and get a title', function () {
     expect($html)->toContain('<title>Test Title</title>');
 });
 
-it('can add and retrieve meta tags', function () {
+it('can add and retrieve meta tags', function (): void {
     $meta = SeoKit::meta();
     $meta->addMeta('description', 'Test Description');
     $meta->addMeta('keywords', 'test, keywords');
@@ -22,7 +22,7 @@ it('can add and retrieve meta tags', function () {
         ->toContain('name="keywords" content="test, keywords"');
 });
 
-it('can remove meta tags', function () {
+it('can remove meta tags', function (): void {
     $meta = SeoKit::meta();
     $meta->addMeta('description', 'Test Description');
     expect($meta->toArray()['meta'])->toHaveKey('description');
@@ -31,7 +31,7 @@ it('can remove meta tags', function () {
     expect($meta->toArray()['meta'])->not->toHaveKey('description');
 });
 
-it('can add and retrieve link tags', function () {
+it('can add and retrieve link tags', function (): void {
     $meta = SeoKit::meta();
     $meta->addLink('canonical', 'https://example.com');
     $meta->addLink('amphtml', 'https://example.com/amp');
@@ -41,7 +41,7 @@ it('can add and retrieve link tags', function () {
         ->toContain('rel="amphtml" href="https://example.com/amp"');
 });
 
-it('can remove link tags', function () {
+it('can remove link tags', function (): void {
     $meta = SeoKit::meta();
     $meta->addLink('canonical', 'https://example.com');
     expect($meta->toArray()['links'])->toHaveKey('canonical');
@@ -50,7 +50,7 @@ it('can remove link tags', function () {
     expect($meta->toArray()['links'])->not->toHaveKey('canonical');
 });
 
-it('can add and retrieve language tags', function () {
+it('can add and retrieve language tags', function (): void {
     $meta = SeoKit::meta();
     $meta->addLanguage('en', 'https://example.com/en');
     $meta->addLanguage('es', 'https://example.com/es');
@@ -60,7 +60,7 @@ it('can add and retrieve language tags', function () {
         ->toContain('rel="alternate" hreflang="es" href="https://example.com/es"');
 });
 
-it('can remove language tags', function () {
+it('can remove language tags', function (): void {
     $meta = SeoKit::meta();
     $meta->addLanguage('en', 'https://example.com/en');
     expect($meta->toArray()['languages'])->toHaveKey('en');
@@ -69,7 +69,7 @@ it('can remove language tags', function () {
     expect($meta->toArray()['languages'])->not->toHaveKey('en');
 });
 
-it('can set description', function () {
+it('can set description', function (): void {
     $meta = SeoKit::meta();
     $meta->description('Test Description');
 
@@ -77,7 +77,7 @@ it('can set description', function () {
     expect($html)->toContain('name="description" content="Test Description"');
 });
 
-it('can set keywords', function () {
+it('can set keywords', function (): void {
     $meta = SeoKit::meta();
     $meta->keywords(['test', 'keyword', 'example']);
 
@@ -85,7 +85,7 @@ it('can set keywords', function () {
     expect($html)->toContain('name="keywords" content="test, keyword, example"');
 });
 
-it('can set robots', function () {
+it('can set robots', function (): void {
     $meta = SeoKit::meta();
     $meta->robots('noindex, nofollow');
 
@@ -93,7 +93,7 @@ it('can set robots', function () {
     expect($html)->toContain('name="robots" content="noindex, nofollow"');
 });
 
-it('can set canonical URL', function () {
+it('can set canonical URL', function (): void {
     $meta = SeoKit::meta();
     $meta->canonical('https://example.com/page');
 
@@ -101,7 +101,7 @@ it('can set canonical URL', function () {
     expect($html)->toContain('rel="canonical" href="https://example.com/page"');
 });
 
-it('can set AMP HTML URL', function () {
+it('can set AMP HTML URL', function (): void {
     $meta = SeoKit::meta();
     $meta->ampHtml('https://example.com/amp');
 
@@ -109,7 +109,7 @@ it('can set AMP HTML URL', function () {
     expect($html)->toContain('rel="amphtml" href="https://example.com/amp"');
 });
 
-it('can set prev and next pagination links', function () {
+it('can set prev and next pagination links', function (): void {
     $meta = SeoKit::meta();
 
     // Test with condition true (default)
@@ -121,7 +121,7 @@ it('can set prev and next pagination links', function () {
         ->toContain('rel="next" href="https://example.com/next"');
 });
 
-it('can conditionally add prev and next links', function () {
+it('can conditionally add prev and next links', function (): void {
     $meta = SeoKit::meta();
 
     // Test with condition false
@@ -133,7 +133,7 @@ it('can conditionally add prev and next links', function () {
         ->not->toContain('rel="next"');
 });
 
-it('converts to array properly', function () {
+it('converts to array properly', function (): void {
     $meta = SeoKit::meta();
     $meta->title('Test Title');
     $meta->addMeta('description', 'Test Description');
@@ -146,7 +146,7 @@ it('converts to array properly', function () {
     expect($array['languages'])->toHaveKey('en', 'https://example.com/en');
 });
 
-it('generates HTML with proper formatting', function () {
+it('generates HTML with proper formatting', function (): void {
     $meta = SeoKit::meta();
     $meta->title('Test Title');
     $meta->addMeta('description', 'Test Description');
@@ -158,7 +158,7 @@ it('generates HTML with proper formatting', function () {
         ->toContain('<link rel="canonical" href="https://example.com" />');
 });
 
-it('generates minified HTML when requested', function () {
+it('generates minified HTML when requested', function (): void {
     $meta = SeoKit::meta();
     $meta->title('Test Title');
     $meta->addMeta('description', 'Test Description');
@@ -167,7 +167,7 @@ it('generates minified HTML when requested', function () {
     expect($html)->not->toContain("\n"); // No newlines in minified output
 });
 
-it('properly escapes special characters in content', function () {
+it('properly escapes special characters in content', function (): void {
     $meta = SeoKit::meta();
     $meta->title('Test & Title with "Quotes" and <Tags>');
     $meta->description('Description with special chars: & < > " \'');
@@ -177,7 +177,7 @@ it('properly escapes special characters in content', function () {
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
-it('handles empty values gracefully', function () {
+it('handles empty values gracefully', function (): void {
     $meta = SeoKit::meta();
     $meta->title('');
     $meta->description('');
@@ -188,7 +188,7 @@ it('handles empty values gracefully', function () {
     expect($html)->toContain('<title></title>');
 });
 
-it('enforces strict typing for methods', function () {
+it('enforces strict typing for methods', function (): void {
     $meta = SeoKit::meta();
 
     // This should pass with strict typing
@@ -200,7 +200,7 @@ it('enforces strict typing for methods', function () {
         ->toContain('name="description" content="Valid Description"');
 });
 
-it('can set viewport meta tag', function () {
+it('can set viewport meta tag', function (): void {
     $meta = SeoKit::meta();
     $meta->addMeta('viewport', 'width=device-width, initial-scale=1.0');
 
@@ -208,7 +208,7 @@ it('can set viewport meta tag', function () {
     expect($html)->toContain('name="viewport" content="width=device-width, initial-scale=1.0"');
 });
 
-it('can set charset', function () {
+it('can set charset', function (): void {
     $meta = SeoKit::meta();
     $meta->addMeta('charset', 'UTF-8');
 
@@ -216,7 +216,7 @@ it('can set charset', function () {
     expect($array['meta'])->toHaveKey('charset', 'UTF-8');
 });
 
-it('can clear all tags', function () {
+it('can clear all tags', function (): void {
     $meta = SeoKit::meta();
     $meta->title('Test Title');
     $meta->addMeta('description', 'Test Description');
