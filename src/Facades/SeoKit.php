@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Larament\SeoKit\SeoKitManager title(string $title)
  * @method static \Larament\SeoKit\SeoKitManager description(string $description)
  * @method static \Larament\SeoKit\SeoKitManager image(string $image)
+ * @method static \Larament\SeoKit\SeoKitManager canonical(string $canonical)
  * @method static string toHtml(bool $minify = false)
  *
  * @see \Larament\SeoKit\SeoKitManager
