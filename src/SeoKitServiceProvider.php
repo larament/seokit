@@ -29,13 +29,18 @@ final class SeoKitServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         Blade::directive('seoKit', function (bool $minify = false) {
-            return "<?php echo app(\Larament\SeoKit\SeoKitManager::class)->toHtml($minify); ?>";
+            return "<?php echo \Larament\SeoKit\Facades\SeoKit::toHtml($minify); ?>";
         });
     }
 
     public function packageRegistered(): void
     {
-        //
+        $this->app->singleton(SeoKitManager::class, fn () => new SeoKitManager(
+            new MetaTags,
+            new OpenGraph,
+            new TwitterCards,
+            new JsonLD
+        ));
     }
 
     public function packageBooted(): void
