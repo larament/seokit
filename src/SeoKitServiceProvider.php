@@ -35,25 +35,7 @@ final class SeoKitServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(
-            MetaTags::class,
-            fn () => new MetaTags(config('seokit.defaults'))
-        );
-
-        $this->app->singleton(
-            OpenGraph::class,
-            fn () => new OpenGraph(config('seokit.opengraph.defaults'))
-        );
-
-        $this->app->singleton(
-            TwitterCards::class,
-            fn () => new TwitterCards(config('seokit.twitter.defaults'))
-        );
-
-        $this->app->singleton(
-            JsonLD::class,
-            fn () => new JsonLD(config('seokit.json_ld.defaults'))
-        );
+        //
     }
 
     public function packageBooted(): void
