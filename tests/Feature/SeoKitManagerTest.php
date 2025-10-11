@@ -71,6 +71,16 @@ it('can set image for open graph and twitter', function () {
         ->and($twitterHtml)->toContain('name="twitter:image" content="https://example.com/image.jpg"');
 });
 
+it('can set canonical for meta tags and open graph', function () {
+    SeoKit::canonical('https://example.com/canonical-page');
+
+    $metaHtml = SeoKit::meta()->toHtml();
+    $ogHtml = SeoKit::opengraph()->toHtml();
+
+    expect($metaHtml)->toContain('rel="canonical" href="https://example.com/canonical-page"')
+        ->and($ogHtml)->toContain('property="og:url" content="https://example.com/canonical-page"');
+});
+
 it('can render all SEO tags to HTML', function () {
     SeoKit::meta()->title('Test Title');
     SeoKit::meta()->description('Test Description');
