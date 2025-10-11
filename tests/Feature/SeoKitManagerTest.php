@@ -405,11 +405,11 @@ it('blade directive renders seo tags', function () {
 
     $blade = Illuminate\Support\Facades\Blade::compileString('@seoKit');
 
-    expect($blade)->toContain('app(\Larament\SeoKit\SeoKitManager::class)->toHtml');
+    expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml');
 });
 
 it('blade directive accepts minify parameter', function () {
     $blade = Illuminate\Support\Facades\Blade::compileString('@seoKit(true)');
 
-    expect($blade)->toContain('->toHtml');
+    expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(1)');
 });
