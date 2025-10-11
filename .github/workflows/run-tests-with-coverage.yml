@@ -3,11 +3,11 @@ name: run-tests-with-coverage
 on:
   push:
     paths:
-      - '**.php'
-      - '.github/workflows/run-tests-with-coverage.yml'
-      - 'phpunit.xml.dist'
-      - 'composer.json'
-      - 'composer.lock'
+      - "**.php"
+      - ".github/workflows/run-tests-with-coverage.yml"
+      - "phpunit.xml.dist"
+      - "composer.json"
+      - "composer.lock"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,7 +25,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: "8.4"
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: xdebug
 
@@ -38,7 +38,6 @@ jobs:
         run: vendor/bin/pest --coverage --min=100
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          file: ./coverage/clover.xml
-          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
