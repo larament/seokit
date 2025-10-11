@@ -3,11 +3,11 @@ name: run-tests
 on:
   push:
     paths:
-      - '**.php'
-      - '.github/workflows/run-tests.yml'
-      - 'phpunit.xml.dist'
-      - 'composer.json'
-      - 'composer.lock'
+      - "**.php"
+      - ".github/workflows/run-tests.yml"
+      - "phpunit.xml.dist"
+      - "composer.json"
+      - "composer.lock"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,7 +29,7 @@ jobs:
             testbench: 10.*
           - laravel: 11.*
             testbench: 9.*
-    
+
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
@@ -57,4 +57,4 @@ jobs:
         run: composer show -D
 
       - name: Execute tests
-        run: vendor/bin/pest --ci
+        run: composer test
