@@ -7,6 +7,9 @@ namespace Larament\SeoKit\Concerns;
 use Larament\SeoKit\Data\SeoData;
 use Larament\SeoKit\Facades\SeoKit;
 
+/**
+ * @phpstan-ignore trait.unused
+ */
 trait HasSeoData
 {
     /**

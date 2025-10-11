@@ -88,7 +88,7 @@ return [
     'opengraph' => [
         'enabled' => true,
         'defaults' => [
-            'site_name' => env('APP_NAME', 'Laravel'),
+            'site_name' => config('app.name', 'Laravel'),
             'type' => 'website',
             'url' => null, // Use null for `URL::current()`, 'full' for `URL::full()`, or false to remove
             'locale' => 'en_US',

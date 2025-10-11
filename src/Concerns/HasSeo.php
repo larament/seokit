@@ -12,6 +12,9 @@ use Larament\SeoKit\Facades\SeoKit;
 use Larament\SeoKit\Models\Seo;
 use Larament\SeoKit\Support\Util;
 
+/**
+ * @phpstan-ignore trait.unused
+ */
 trait HasSeo
 {
     /**
