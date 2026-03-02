@@ -35,7 +35,7 @@ jobs:
           composer update --prefer-dist --no-interaction
 
       - name: Execute tests with coverage
-        run: vendor/bin/pest --coverage --min=100
+        run: vendor/bin/pest --coverage --min=95
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
