@@ -254,7 +254,7 @@ it('adds inertia attribute to title', function (): void {
             DummyInertiaMiddleware::class,
         ]);
 
-    $meta = new MetaTags();
+    $meta = new MetaTags;
     $meta->title('Inertia Title');
 
     $html = $meta->toHtml();
