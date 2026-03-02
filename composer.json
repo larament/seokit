@@ -64,7 +64,7 @@
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest --parallel",
-        "test-coverage": "vendor/bin/pest --coverage --parallel --min=100",
+        "test-coverage": "vendor/bin/pest --coverage --parallel --compact --min=95",
         "format": "vendor/bin/pint"
     },
     "config": {

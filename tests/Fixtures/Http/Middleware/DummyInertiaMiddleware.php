@@ -1,0 +1,12 @@
+<?php
+
+namespace Larament\SeoKit\Tests\Fixtures\Http\Middleware;
+
+use Inertia\Middleware;
+
+include 'Middleware.php';
+
+class DummyInertiaMiddleware extends Middleware
+{
+    //
+}

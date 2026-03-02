@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Larament\SeoKit\Support\Util;
+use Larament\SeoKit\Tests\Fixtures\Http\Middleware\DummyInertiaMiddleware;
 
 it('affixes title with before and after', function (): void {
     config(['seokit.defaults.before_title' => 'Prefix']);
@@ -140,4 +143,63 @@ it('handles URL with file extension when getting title', function (): void {
     $result = Util::getTitleFromUrl();
 
     expect($result)->toBe('Contact Us');
+});
+
+it('detects inertia route when middleware is present', function (): void {
+    $route = Arr::random(Route::getRoutes()->getRoutes());
+    Route::partialMock()
+        ->shouldReceive('current')
+        ->andReturn($route);
+
+    Route::partialMock()
+        ->shouldReceive('gatherRouteMiddleware')
+        ->with($route)
+        ->andReturn([
+            'web',
+            DummyInertiaMiddleware::class,
+        ]);
+
+    expect(Util::isInertiaRoute())->toBeTrue();
+});
+
+it('does not detect inertia route when middleware is absent', function (): void {
+    $route = Arr::random(Route::getRoutes()->getRoutes());
+    Route::partialMock()
+        ->shouldReceive('current')
+        ->andReturn($route);
+
+    Route::partialMock()
+        ->shouldReceive('gatherRouteMiddleware')
+        ->with($route)
+        ->andReturn([
+            'web',
+            'auth',
+        ]);
+
+    expect(Util::isInertiaRoute())->toBeFalse();
+});
+
+it('does not detect inertia route when current route is null', function (): void {
+    Route::partialMock()
+        ->shouldReceive('current')
+        ->andReturn(null);
+
+    expect(Util::isInertiaRoute())->toBeFalse();
+});
+
+it('handles closure in route middleware', function (): void {
+    $route = Arr::random(Route::getRoutes()->getRoutes());
+    Route::partialMock()
+        ->shouldReceive('current')
+        ->andReturn($route);
+
+    Route::partialMock()
+        ->shouldReceive('gatherRouteMiddleware')
+        ->with($route)
+        ->andReturn([
+            'web',
+            fn () => 'closure',
+        ]);
+
+    expect(Util::isInertiaRoute())->toBeFalse();
 });

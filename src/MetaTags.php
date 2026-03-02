@@ -171,7 +171,7 @@ final class MetaTags
     public function toHtml(bool $minify = false): string
     {
         $output = [
-            "<title>{$this->title}</title>",
+            '<title'.(Util::isInertiaRoute() ? ' inertia' : '').">{$this->title}</title>",
         ];
 
         foreach ($this->meta as $name => $content) {

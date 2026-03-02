@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Larament\SeoKit\Facades\SeoKit;
+use Larament\SeoKit\MetaTags;
+use Larament\SeoKit\Tests\Fixtures\Http\Middleware\DummyInertiaMiddleware;
 
 it('can set and get a title', function (): void {
     $meta = SeoKit::meta();
@@ -91,6 +95,14 @@ it('can set robots', function (): void {
 
     $html = $meta->toHtml();
     expect($html)->toContain('name="robots" content="noindex, nofollow"');
+});
+
+it('can set robots with an array', function (): void {
+    $meta = SeoKit::meta();
+    $meta->robots(['noindex', 'nofollow', 'noarchive']);
+
+    $html = $meta->toHtml();
+    expect($html)->toContain('name="robots" content="noindex, nofollow, noarchive"');
 });
 
 it('can set canonical URL', function (): void {
@@ -225,4 +237,26 @@ it('can clear all tags', function (): void {
     // Assuming there's a clear method or similar
     $array = $meta->toArray();
     expect($array)->not->toBeEmpty();
+});
+
+it('adds inertia attribute to title', function (): void {
+    $route = Arr::random(Route::getRoutes()->getRoutes());
+
+    Route::partialMock()
+        ->shouldReceive('current')
+        ->andReturn($route);
+
+    Route::partialMock()
+        ->shouldReceive('gatherRouteMiddleware')
+        ->with($route)
+        ->andReturn([
+            'web',
+            DummyInertiaMiddleware::class,
+        ]);
+
+    $meta = new MetaTags();
+    $meta->title('Inertia Title');
+
+    $html = $meta->toHtml();
+    expect($html)->toContain('<title inertia>Inertia Title</title>');
 });

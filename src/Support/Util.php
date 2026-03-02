@@ -7,6 +7,7 @@ namespace Larament\SeoKit\Support;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 
 final class Util
 {
@@ -62,5 +63,18 @@ final class Util
     public static function modelCacheKey(Model $model): string
     {
         return sprintf('seokit.%s.%s', str_replace('\\', '.', $model->getMorphClass()), $model->getKey());
+    }
+
+    /**
+     * Check if the current route is an Inertia route.
+     */
+    public static function isInertiaRoute(): bool
+    {
+        if (! $currentRoute = Route::current()) {
+            return false;
+        }
+
+        return collect(Route::gatherRouteMiddleware($currentRoute))
+            ->contains(fn (string|Closure $middleware): bool => ! $middleware instanceof Closure && is_subclass_of($middleware, \Inertia\Middleware::class));
     }
 }
