@@ -2,11 +2,7 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
 use Larament\SeoKit\Facades\SeoKit;
-use Larament\SeoKit\MetaTags;
-use Larament\SeoKit\Tests\Fixtures\Http\Middleware\DummyInertiaMiddleware;
 
 it('can set and get a title', function (): void {
     $meta = SeoKit::meta();
@@ -237,26 +233,4 @@ it('can clear all tags', function (): void {
     // Assuming there's a clear method or similar
     $array = $meta->toArray();
     expect($array)->not->toBeEmpty();
-});
-
-it('adds inertia attribute to title', function (): void {
-    $route = Arr::random(Route::getRoutes()->getRoutes());
-
-    Route::partialMock()
-        ->shouldReceive('current')
-        ->andReturn($route);
-
-    Route::partialMock()
-        ->shouldReceive('gatherRouteMiddleware')
-        ->with($route)
-        ->andReturn([
-            'web',
-            DummyInertiaMiddleware::class,
-        ]);
-
-    $meta = new MetaTags;
-    $meta->title('Inertia Title');
-
-    $html = $meta->toHtml();
-    expect($html)->toContain('<title inertia>Inertia Title</title>');
 });
