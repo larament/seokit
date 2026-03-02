@@ -5,34 +5,15 @@ declare(strict_types=1);
 namespace Larament\SeoKit;
 
 use Illuminate\Support\Facades\Blade;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Support\ServiceProvider;
+use Larament\SeoKit\Console\Commands\InstallCommand;
 
-final class SeoKitServiceProvider extends PackageServiceProvider
+final class SeoKitServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    public function register(): void
     {
-        $package
-            ->name('seokit')
-            ->hasConfigFile()
-            ->hasMigration('create_seokit_table')
-            ->hasInstallCommand(function (InstallCommand $command): void {
-                $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('larament/seokit');
-            });
-    }
+        $this->mergeConfigFrom(__DIR__.'/../config/seokit.php', 'seokit');
 
-    public function bootingPackage(): void
-    {
-        Blade::directive('seoKit', fn (bool $minify = false): string => "<?php echo \Larament\SeoKit\Facades\SeoKit::toHtml($minify); ?>");
-    }
-
-    public function packageRegistered(): void
-    {
         $this->app->singleton(SeoKitManager::class, fn (): SeoKitManager => new SeoKitManager(
             new MetaTags,
             new OpenGraph,
@@ -41,8 +22,37 @@ final class SeoKitServiceProvider extends PackageServiceProvider
         ));
     }
 
-    public function packageBooted(): void
+    public function boot(): void
     {
-        //
+        $this->registerPublishing();
+        $this->registerCommands();
+        $this->registerBladeDirective();
+    }
+
+    private function registerPublishing(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/seokit.php' => config_path('seokit.php'),
+            ], 'seokit-config');
+
+            $this->publishes([
+                __DIR__.'/../database/migrations/create_seokit_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_seokit_table.php'),
+            ], 'seokit-migrations');
+        }
+    }
+
+    private function registerCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommand::class,
+            ]);
+        }
+    }
+
+    private function registerBladeDirective(): void
+    {
+        Blade::directive('seoKit', fn (bool $minify = false): string => "<?php echo \Larament\SeoKit\Facades\SeoKit::toHtml($minify); ?>");
     }
 }
