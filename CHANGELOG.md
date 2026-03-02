@@ -2,6 +2,30 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.1.0 - 2026-03-02
+
+### What's Changed
+
+#### 🚀 New Features
+
+- Added **Inertia.js** route detection and automatic title rendering updates.
+- Added `canonical()` method to the `SeoKit` facade for easier canonical URL management.
+
+#### 🛠️ Refactoring & Improvements
+
+- Removed `spatie/laravel-package-tools` dependency to reduce overhead.
+- Improved type safety with comprehensive PHP type hints across the codebase.
+- Updated `site_name` configuration to default to `config('app.name')`.
+
+#### 🧹 Maintenance
+
+- Code styling fixes and internal cleanup.
+- Updated GitHub Action dependencies (checkout, fetch-metadata, git-auto-commit).
+
+#### 📝 Full Changelog
+
+https://github.com/larament/seokit/compare/v1.0.1...v1.1.0
+
 ## v1.0.1 - 2025-10-11
 
 **Full Changelog**: https://github.com/larament/seokit/compare/v1.0...v1.0.1
