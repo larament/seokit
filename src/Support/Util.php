@@ -74,7 +74,9 @@ final class Util
             return false;
         }
 
-        return collect(Route::gatherRouteMiddleware($currentRoute))
-            ->contains(fn (string|Closure $middleware): bool => ! $middleware instanceof Closure && is_subclass_of($middleware, \Inertia\Middleware::class));
+        return collect(Route::gatherRouteMiddleware($currentRoute))->contains(
+            // @phpstan-ignore-next-line
+            fn (string|Closure $middleware): bool => ! $middleware instanceof Closure && is_subclass_of($middleware, \Inertia\Middleware::class)
+        );
     }
 }
