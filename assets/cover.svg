@@ -1,0 +1,78 @@
+<svg width="1600" height="400" viewBox="0 0 1600 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">SeoKit cover image</title>
+  <desc id="desc">A wide cover image for the SeoKit Laravel package with layered gradients, metadata-inspired lines, and the SeoKit wordmark.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#081A1B"/>
+      <stop offset="0.52" stop-color="#0C2E2F"/>
+      <stop offset="1" stop-color="#124246"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="274" y1="74" x2="1288" y2="334" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#163C40" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#0A2325" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="1201" y1="54" x2="1416" y2="301" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD166"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#9AE6B4"/>
+      <stop offset="1" stop-color="#2DD4BF"/>
+    </linearGradient>
+    <filter id="blur" x="1081" y="-46" width="432" height="432" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="40" result="effect1_foregroundBlur_1_2"/>
+    </filter>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" stroke="white" stroke-opacity="0.07"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="400" fill="url(#bg)"/>
+  <rect width="1600" height="400" fill="url(#grid)"/>
+
+  <g opacity="0.55" filter="url(#blur)">
+    <circle cx="1297" cy="170" r="136" fill="#F59E0B"/>
+  </g>
+
+  <path d="M0 312C119 269 249 258 401 278C575 300 665 358 835 346C994 335 1110 246 1275 236C1386 229 1498 259 1600 304V400H0V312Z" fill="#071314" fill-opacity="0.45"/>
+
+  <rect x="120" y="60" width="1360" height="280" rx="28" fill="url(#panel)" stroke="white" stroke-opacity="0.08"/>
+
+  <g opacity="0.95">
+    <rect x="180" y="120" width="88" height="88" rx="20" fill="#0D2628" stroke="white" stroke-opacity="0.08"/>
+    <circle cx="221" cy="164" r="18" stroke="url(#mint)" stroke-width="7"/>
+    <path d="M235 178L248 191" stroke="url(#accent)" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <text x="304" y="168" fill="white" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="700" letter-spacing="-1.5">SeoKit</text>
+  <text x="308" y="211" fill="#9AD7D2" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="500" letter-spacing="2.2">LARAVEL SEO TOOLKIT</text>
+  <text x="180" y="270" fill="#D8ECEA" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="400">A clean SEO toolkit for Laravel.</text>
+
+  <g opacity="0.92">
+    <rect x="1066" y="100" width="294" height="164" rx="22" fill="#0A1F21" stroke="white" stroke-opacity="0.09"/>
+    <rect x="1096" y="129" width="78" height="10" rx="5" fill="url(#mint)"/>
+    <rect x="1096" y="155" width="202" height="8" rx="4" fill="white" fill-opacity="0.16"/>
+    <rect x="1096" y="175" width="178" height="8" rx="4" fill="white" fill-opacity="0.16"/>
+    <rect x="1096" y="195" width="227" height="8" rx="4" fill="white" fill-opacity="0.16"/>
+    <rect x="1096" y="229" width="84" height="12" rx="6" fill="#F97316"/>
+    <rect x="1190" y="229" width="104" height="12" rx="6" fill="#14B8A6"/>
+  </g>
+
+  <g opacity="0.48">
+    <path d="M1022 118C1063 118 1063 158 1104 158" stroke="#8BE4D1" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="1022" cy="118" r="7" fill="#8BE4D1"/>
+    <circle cx="1104" cy="158" r="7" fill="#8BE4D1"/>
+
+    <path d="M1022 182C1078 182 1078 210 1134 210" stroke="#FFD166" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="1022" cy="182" r="7" fill="#FFD166"/>
+    <circle cx="1134" cy="210" r="7" fill="#FFD166"/>
+
+    <path d="M1022 246C1088 246 1088 138 1196 138" stroke="#F97316" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="1022" cy="246" r="7" fill="#F97316"/>
+    <circle cx="1196" cy="138" r="7" fill="#F97316"/>
+  </g>
+
+  <text x="180" y="102" fill="#9AD7D2" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="3">LARAMENT</text>
+</svg>
