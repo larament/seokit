@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 use Larament\SeoKit\Support\Util;
 use Larament\SeoKit\Tests\Fixtures\Http\Middleware\DummyInertiaMiddleware;
@@ -89,7 +90,7 @@ it('escapes special characters in clean string', function (): void {
 });
 
 it('generates unique model cache key', function (): void {
-    $model = new class extends Illuminate\Database\Eloquent\Model
+    $model = new class extends Model
     {
         protected $table = 'posts';
 

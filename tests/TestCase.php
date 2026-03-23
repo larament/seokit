@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Larament\SeoKit\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 use Larament\SeoKit\SeoKitServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -30,7 +31,7 @@ class TestCase extends Orchestra
         // Use array cache driver to avoid database table issues in tests
         config()->set('cache.default', 'array');
 
-        foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__.'/../database/migrations') as $migration) {
+        foreach (File::allFiles(__DIR__.'/../database/migrations') as $migration) {
             (include $migration->getRealPath())->up();
         }
 

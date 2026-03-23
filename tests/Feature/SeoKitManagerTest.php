@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 use Larament\SeoKit\Data\SeoData;
 use Larament\SeoKit\Facades\SeoKit;
@@ -403,13 +404,13 @@ it('sets default json ld from config', function (): void {
 it('blade directive renders seo tags', function (): void {
     SeoKit::title('Blade Test');
 
-    $blade = Illuminate\Support\Facades\Blade::compileString('@seoKit');
+    $blade = Blade::compileString('@seoKit');
 
     expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml');
 });
 
 it('blade directive accepts minify parameter', function (): void {
-    $blade = Illuminate\Support\Facades\Blade::compileString('@seoKit(true)');
+    $blade = Blade::compileString('@seoKit(true)');
 
     expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(1)');
 });

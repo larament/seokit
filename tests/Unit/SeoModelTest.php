@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Larament\SeoKit\Models\Seo;
 
 it('uses default table name from config', function (): void {
@@ -33,7 +35,7 @@ it('has morphTo relationship for model', function (): void {
 
     $relation = $seo->model();
 
-    expect($relation)->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\MorphTo::class);
+    expect($relation)->toBeInstanceOf(MorphTo::class);
 });
 
 it('casts structured_data as json', function (): void {
@@ -64,5 +66,5 @@ it('can be instantiated', function (): void {
     $seo = new Seo;
 
     expect($seo)->toBeInstanceOf(Seo::class)
-        ->and($seo)->toBeInstanceOf(Illuminate\Database\Eloquent\Model::class);
+        ->and($seo)->toBeInstanceOf(Model::class);
 });

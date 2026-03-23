@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
@@ -38,7 +39,7 @@ afterEach(function (): void {
 it('has seo morphOne relationship', function (): void {
     $relation = $this->testModel->seo();
 
-    expect($relation)->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\MorphOne::class)
+    expect($relation)->toBeInstanceOf(MorphOne::class)
         ->and($relation->getRelated())->toBeInstanceOf(Seo::class);
 });
 

@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use Inertia\Middleware;
 
 final class Util
 {
@@ -76,7 +77,7 @@ final class Util
 
         return collect(Route::gatherRouteMiddleware($currentRoute))->contains(
             // @phpstan-ignore-next-line
-            fn (string|Closure $middleware): bool => ! $middleware instanceof Closure && is_subclass_of($middleware, \Inertia\Middleware::class)
+            fn (string|Closure $middleware): bool => ! $middleware instanceof Closure && is_subclass_of($middleware, Middleware::class)
         );
     }
 }
