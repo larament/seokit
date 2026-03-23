@@ -90,11 +90,11 @@ For model-driven SEO, SeoKit also provides `HasSeo` and `HasSeoData` traits.
 
 Detailed documentation lives in the GitHub wiki:
 
-- [Getting Started](../../seokit/wiki)
-- [Core Concepts](../../seokit/wiki/Core-Concepts)
-- [Advanced SEO Management](../../seokit/wiki/Advanced-SEO-Management)
-- [Database-Backed SEO](../../seokit/wiki/Database-Backed-SEO)
-- [Cookbooks and Examples](../../seokit/wiki/Cookbooks-and-Examples)
+- [Getting Started](../../wiki)
+- [Core Concepts](../../wiki/Core-Concepts)
+- [Advanced SEO Management](../../wiki/Advanced-SEO-Management)
+- [Database-Backed SEO](../../wiki/Database-Backed-SEO)
+- [Cookbooks and Examples](../../wiki/Cookbooks-and-Examples)
 
 The README is intentionally kept short. The wiki should be the source of truth for package guides, examples, and feature-specific documentation.
 
