@@ -19,7 +19,7 @@ A complete SEO package for Laravel, covering everything from meta tags to social
 -   **Flexible Configuration**: Sensible defaults with extensive customization options
 -   **Performance**: Built-in caching for SEO data to minimize database queries
 -   **Developer Friendly**: Clean, fluent API with chainable methods
--   **Modern Laravel**: Built for Laravel 11.x and 12.x with PHP 8.3+
+-   **Modern Laravel**: Built for Laravel 11.x, 12.x, and 13.x with PHP 8.3+
 
 ### Features
 
@@ -36,7 +36,7 @@ A complete SEO package for Laravel, covering everything from meta tags to social
 ## Requirements
 
 -   PHP 8.3 or higher
--   Laravel 11.x or 12.x
+-   Laravel 11.x, 12.x, or 13.x
 
 ## Installation
 

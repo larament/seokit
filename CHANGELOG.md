@@ -2,6 +2,14 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## Unreleased
+
+### What's Changed
+
+- Added Laravel 13 support.
+- Added Orchestra Testbench 11 to the development support matrix.
+- Removed the dev-only `nunomaduro/collision` constraint to avoid blocking Laravel 13 dependency resolution.
+
 ## v1.1.0 - 2026-03-02
 
 ### What's Changed

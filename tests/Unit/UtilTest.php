@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Larament\SeoKit\Support\Util;
 use Larament\SeoKit\Tests\Fixtures\Http\Middleware\DummyInertiaMiddleware;
+
+function fakeRoute(): Illuminate\Routing\Route
+{
+    return new Illuminate\Routing\Route('GET', '/test', fn () => 'ok');
+}
 
 it('affixes title with before and after', function (): void {
     config(['seokit.defaults.before_title' => 'Prefix']);
@@ -146,7 +150,7 @@ it('handles URL with file extension when getting title', function (): void {
 });
 
 it('detects inertia route when middleware is present', function (): void {
-    $route = Arr::random(Route::getRoutes()->getRoutes());
+    $route = fakeRoute();
     Route::partialMock()
         ->shouldReceive('current')
         ->andReturn($route);
@@ -163,7 +167,7 @@ it('detects inertia route when middleware is present', function (): void {
 });
 
 it('does not detect inertia route when middleware is absent', function (): void {
-    $route = Arr::random(Route::getRoutes()->getRoutes());
+    $route = fakeRoute();
     Route::partialMock()
         ->shouldReceive('current')
         ->andReturn($route);
@@ -188,7 +192,7 @@ it('does not detect inertia route when current route is null', function (): void
 });
 
 it('handles closure in route middleware', function (): void {
-    $route = Arr::random(Route::getRoutes()->getRoutes());
+    $route = fakeRoute();
     Route::partialMock()
         ->shouldReceive('current')
         ->andReturn($route);
