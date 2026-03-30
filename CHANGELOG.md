@@ -2,6 +2,52 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.2.0 - 2026-03-30
+
+#### New Features
+
+- Added Laravel 13 support.
+
+#### Documentation
+
+- Added a new `assets/cover.svg` package cover image.
+- Refactored `README.md` for a shorter, wiki-first package overview.
+
+#### Testing & CI
+
+- Added Orchestra Testbench 11 to the development support matrix.
+- Changed CI test execution to use Pest directly.
+- Reduced the minimum coverage threshold from 100% to 95%.
+- Updated GitHub Action dependencies (`ramsey/composer-install`, `codecov/codecov-action`, and `dependabot/fetch- metadata`).
+
+#### Maintenance
+
+- Removed the dev-only `nunomaduro/collision` constraint to avoid blocking Laravel 13 dependency resolution.
+- Small internal refactors and test cleanup for the Laravel 13 support work.
+
+**Full Changelog**: https://github.com/larament/seokit/compare/v1.1.0...v1.2.0  ### New Features
+
+- Added Laravel 13 support.
+
+### Documentation
+
+- Added a new `assets/cover.svg` package cover image.
+- Refactored `README.md` for a shorter, wiki-first package overview.
+
+#### Testing & CI
+
+- Added Orchestra Testbench 11 to the development support matrix.
+- Changed CI test execution to use Pest directly.
+- Reduced the minimum coverage threshold from 100% to 95%.
+- Updated GitHub Action dependencies (`ramsey/composer-install`, `codecov/codecov-action`, and `dependabot/fetch- metadata`).
+
+#### Maintenance
+
+- Removed the dev-only `nunomaduro/collision` constraint to avoid blocking Laravel 13 dependency resolution.
+- Small internal refactors and test cleanup for the Laravel 13 support work.
+
+**Full Changelog**: https://github.com/larament/seokit/compare/v1.1.0...v1.2.0
+
 ## Unreleased
 
 ### What's Changed
