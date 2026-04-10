@@ -2,6 +2,20 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.3.1 - 2026-04-10
+
+### Fixed
+
+- `HasSeo::prepareSeoTags()` now applies fallback SEO data even when no SEO relationship record exists.
+
+### Added
+
+- Regression test coverage for fallback-only SEO rendering when the SEO relation is missing.
+
+### Notes
+
+- Existing merge behavior remains: non-empty SEO relationship values override fallback values.
+
 ## v1.3.0 - 2026-04-10
 
 ### Added
