@@ -30,14 +30,17 @@ trait HasSeo
      */
     public function prepareSeoTags(): void
     {
-        if (! $data = $this->seoData()) {
+        $data = $this->seoData();
+        $fallbackData = $this->fallbackSeoData();
+
+        if ($fallbackData->isEmpty() && empty($data)) {
             return;
         }
 
         // merge fallback data with seo data
         $mergedData = array_merge(
-            $this->fallbackSeoData()->toArray(),
-            array_filter($data, static fn (mixed $value): bool => ! empty($value)),
+            $fallbackData->toArray(),
+            array_filter($data ?? [], static fn (mixed $value): bool => ! empty($value)),
         );
 
         SeoKit::fromSeoData(SeoData::fromArray($mergedData));

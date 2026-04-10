@@ -187,6 +187,38 @@ it('does not prepare seo tags when seo data is null', function (): void {
     expect($html)->toContain('<title>');
 });
 
+it('prepares seo tags from fallback when seo relationship is missing', function (): void {
+    $model = new class extends Model
+    {
+        use HasSeo;
+
+        protected $table = 'test_posts';
+
+        protected $guarded = [];
+
+        protected function fallbackSeoData(): SeoData
+        {
+            return new SeoData(
+                title: $this->title,
+                description: $this->excerpt,
+            );
+        }
+    };
+
+    $post = $model->create([
+        'title' => 'Fallback Only Title',
+        'excerpt' => 'Fallback only description',
+    ]);
+
+    // No SEO relationship row
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    expect($html)->toContain('Fallback Only Title')
+        ->and($html)->toContain('Fallback only description');
+});
+
 it('retrieves seo data from cache', function (): void {
     $post = $this->testModel->create(['title' => 'Test Post']);
 
