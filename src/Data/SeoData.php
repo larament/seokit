@@ -32,4 +32,14 @@ final readonly class SeoData
             $data['structured_data'] ?? null,
         );
     }
+
+    public function isEmpty(): bool
+    {
+        return empty(array_filter($this->toArray()));
+    }
+
+    public function toArray(): array
+    {
+        return get_object_vars($this);
+    }
 }

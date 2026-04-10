@@ -24,10 +24,8 @@ trait HasSeoData
     {
         $data = $this->toSeoData();
 
-        if (empty(array_filter(get_object_vars($data)))) {
-            return;
+        if (! $data->isEmpty()) {
+            SeoKit::fromSeoData($data);
         }
-
-        SeoKit::fromSeoData($data);
     }
 }
