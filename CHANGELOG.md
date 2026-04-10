@@ -2,6 +2,21 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.3.0 - 2026-04-10
+
+### Added
+
+- Model-defined SEO fallback support in `HasSeo` via `fallbackSeoData()`.
+
+### Changed
+
+- `prepareSeoTags()` now merges database SEO values with model fallback data.
+- Improved `SeoData` handling with an `isEmpty()` helper for cleaner checks.
+
+### Tests
+
+- Updated `HasSeo` tests to cover user-defined fallback values and fixture constraints.
+
 ## v1.2.0 - 2026-03-30
 
 #### New Features
