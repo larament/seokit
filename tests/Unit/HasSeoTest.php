@@ -8,6 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Larament\SeoKit\Concerns\HasSeo;
+use Larament\SeoKit\Data\SeoData;
 use Larament\SeoKit\Facades\SeoKit;
 use Larament\SeoKit\Models\Seo;
 use Larament\SeoKit\Support\Util;
@@ -17,6 +18,10 @@ beforeEach(function (): void {
     Schema::create('test_posts', function (Blueprint $table): void {
         $table->id();
         $table->string('title');
+        $table->string('name')->nullable();
+        $table->text('description')->nullable();
+        $table->text('excerpt')->nullable();
+        $table->text('summary')->nullable();
         $table->timestamps();
     });
 
@@ -59,6 +64,115 @@ it('prepares seo tags when seo data exists', function (): void {
     expect($html)->toContain('SEO Title')
         ->and($html)->toContain('SEO Description')
         ->and($html)->toContain('https://example.com/test');
+});
+
+it('falls back to model attributes when seo fields are empty', function (): void {
+    $model = new class extends Model
+    {
+        use HasSeo;
+
+        protected $table = 'test_posts';
+
+        protected $guarded = [];
+
+        protected function fallbackSeoData(): SeoData
+        {
+            return new SeoData(
+                title: $this->title,
+                description: $this->description,
+            );
+        }
+    };
+
+    $post = $model->create(['title' => 'Fallback Post Title', 'description' => 'Fallback post description']);
+
+    $post->seo()->create([
+        'title' => '',
+        'description' => '',
+    ]);
+
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    expect($html)->toContain('Fallback Post Title')
+        ->and($html)->toContain('Fallback post description');
+});
+
+it('uses user-defined fallback values', function (): void {
+    $model = new class extends Model
+    {
+        use HasSeo;
+
+        protected $table = 'test_posts';
+
+        protected $guarded = [];
+
+        protected function fallbackSeoData(): SeoData
+        {
+            return new SeoData(
+                title: $this->name,
+                description: $this->excerpt,
+            );
+        }
+    };
+
+    $post = $model->create([
+        'title' => 'unused-title',
+        'name' => 'Fallback Name Title',
+        'excerpt' => 'Fallback excerpt description',
+    ]);
+
+    $post->seo()->create([
+        'title' => '',
+        'description' => '',
+    ]);
+
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    expect($html)->toContain('Fallback Name Title')
+        ->and($html)->toContain('Fallback excerpt description');
+});
+
+it('keeps explicit seo field values over fallback values', function (): void {
+    $post = $this->testModel->create([
+        'title' => 'Model Title',
+        'description' => 'Model Description',
+    ]);
+
+    $post->seo()->create([
+        'title' => 'Explicit SEO Title',
+        'description' => 'Explicit SEO Description',
+    ]);
+
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    expect($html)->toContain('Explicit SEO Title')
+        ->and($html)->toContain('Explicit SEO Description')
+        ->and($html)->not->toContain('<title>Model Title');
+});
+
+it('does not apply fallback when model does not define seoFallbackData', function (): void {
+    $post = $this->testModel->create([
+        'title' => 'Model Title',
+        'description' => 'Model Description',
+    ]);
+
+    $post->seo()->create([
+        'title' => '',
+        'description' => '',
+    ]);
+
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    expect($html)->not->toContain('Model Title')
+        ->and($html)->not->toContain('Model Description');
 });
 
 it('does not prepare seo tags when seo data is null', function (): void {

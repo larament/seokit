@@ -34,7 +34,13 @@ trait HasSeo
             return;
         }
 
-        SeoKit::fromSeoData(SeoData::fromArray($data));
+        // merge fallback data with seo data
+        $mergedData = array_merge(
+            $this->fallbackSeoData()->toArray(),
+            array_filter($data, static fn (mixed $value): bool => ! empty($value)),
+        );
+
+        SeoKit::fromSeoData(SeoData::fromArray($mergedData));
     }
 
     /**
@@ -65,5 +71,13 @@ trait HasSeo
             $model->seo()->delete();
             Cache::forget(Util::modelCacheKey($model));
         });
+    }
+
+    /**
+     * Define fallback SEO values in the model using this trait.
+     */
+    protected function fallbackSeoData(): SeoData
+    {
+        return new SeoData;
     }
 }
