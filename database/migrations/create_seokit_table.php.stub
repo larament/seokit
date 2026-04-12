@@ -17,6 +17,7 @@ return new class extends Migration
             // General SEO
             $table->string('title')->nullable();
             $table->text('description')->nullable();
+            $table->string('keywords')->nullable();
             $table->string('canonical')->nullable();
             $table->string('robots')->nullable();
 

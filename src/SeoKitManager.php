@@ -54,6 +54,9 @@ final class SeoKitManager
             ->title($data->title)
             ->description($data->description);
 
+        if ($data->keywords) {
+            $this->meta->keywords(explode(', ', $data->keywords));
+        }
         if ($data->robots) {
             $this->meta->robots($data->robots);
         }

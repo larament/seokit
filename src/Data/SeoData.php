@@ -9,6 +9,7 @@ final readonly class SeoData
     public function __construct(
         public string $title = '',
         public string $description = '',
+        public ?string $keywords = null,
         public ?string $canonical = null,
         public ?string $robots = null,
         public string $og_title = '',
@@ -23,6 +24,7 @@ final readonly class SeoData
         return new self(
             $data['title'] ?? '',
             $data['description'] ?? '',
+            $data['keywords'] ?? null,
             $data['canonical'] ?? null,
             $data['robots'] ?? null,
             $data['og_title'] ?? '',
