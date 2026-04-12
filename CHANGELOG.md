@@ -2,6 +2,20 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.4.0 - 2026-04-12
+
+### Added
+
+- Meta keywords support (`keywords` column in migration, `SeoData` field, and `MetaTags::keywords()`).
+- SeoKit integration skill for AI agents (Laravel boost).
+
+### Enhanced
+
+- Updated guidelines with full API reference and `SeoData` fields.
+- 
+
+**Full Changelog**: https://github.com/larament/seokit/compare/v1.3.1...v1.4.0
+
 ## v1.3.1 - 2026-04-10
 
 ### Fixed
