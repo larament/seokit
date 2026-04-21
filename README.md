@@ -2,6 +2,7 @@
 
 # Technical SEO made easy in Laravel.
 
+[![Laravel Compatibility](https://badge.laravel.cloud/badge/larament/seokit?style=for-the-badge)](https://packagist.org/packages/larament/seokit)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/larament/seokit.svg?style=for-the-badge)](https://packagist.org/packages/larament/seokit)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/larament/seokit/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/larament/seokit/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/larament/seokit.svg?style=for-the-badge)](https://packagist.org/packages/larament/seokit)
