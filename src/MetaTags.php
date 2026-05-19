@@ -89,6 +89,14 @@ final class MetaTags
     }
 
     /**
+     * Get the title.
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
      * Set the meta description.
      */
     public function description(string $description): self
@@ -159,6 +167,7 @@ final class MetaTags
     public function toArray(): array
     {
         return [
+            'title' => $this->title,
             'meta' => $this->meta,
             'links' => $this->links,
             'languages' => $this->languages,
