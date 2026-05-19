@@ -2,6 +2,14 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.5.0 - 2026-05-19
+
+### What's Changed
+
+* chore(deps): bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 by @dependabot[bot] in https://github.com/larament/seokit/pull/9
+
+**Full Changelog**: https://github.com/larament/seokit/compare/v1.4.0...v1.5.0
+
 ## v1.4.0 - 2026-04-12
 
 ### Added
