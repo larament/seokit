@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Larament\SeoKit\Exceptions\InvalidImageUrlException;
 use Larament\SeoKit\Models\Seo;
+use Larament\SeoKit\Support\Util;
 
 it('uses default table name from config', function (): void {
     config(['seokit.table_name' => 'seokit']);
@@ -132,4 +134,34 @@ it('resolves twitter_image_url with dedicated twitter_image and disk', function 
     ]);
 
     expect($seo->twitter_image_url)->toBe(url('/storage/covers/twitter.png'));
+});
+
+it('does not throw when saving or deleting without associated model', function (): void {
+    $seo = Seo::create([
+        'title' => 'Orphan SEO',
+        'model_type' => Seo::class,
+        'model_id' => 999999,
+    ]);
+
+    expect($seo->exists)->toBeTrue();
+
+    $seo->delete();
+    expect($seo->exists)->toBeFalse();
+});
+
+it('clears model cache when attached seo record is deleted', function (): void {
+    $seo = Seo::create([
+        'title' => 'Cache Delete Test',
+        'model_type' => Seo::class,
+        'model_id' => 1,
+    ]);
+
+    // When model_id is 1, $seo->model resolves to the Seo record with id 1
+    $cacheKey = Util::modelCacheKey($seo);
+    Cache::put($cacheKey, ['title' => 'cached']);
+    expect(Cache::has($cacheKey))->toBeTrue();
+
+    $seo->delete();
+
+    expect(Cache::has($cacheKey))->toBeFalse();
 });
