@@ -113,10 +113,10 @@ Run static analysis:
 composer analyse
 ```
 
-Format the codebase:
+Lint and format the codebase:
 
 ```bash
-composer format
+composer lint
 ```
 
 ## Changelog
