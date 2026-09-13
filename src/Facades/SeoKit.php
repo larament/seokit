@@ -23,7 +23,7 @@ use Larament\SeoKit\SeoKitManager;
  */
 final class SeoKit extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return SeoKitManager::class;
     }
