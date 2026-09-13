@@ -73,6 +73,14 @@ it('cleans string by removing html tags', function (): void {
         ->and($result)->toContain('Hello World');
 });
 
+it('strips html tags before escaping', function (): void {
+    $dirty = '<p>Hello <strong>World</strong></p>';
+
+    $result = Util::cleanString($dirty);
+
+    expect($result)->toBe('Hello World');
+});
+
 it('cleans string by removing http-equiv', function (): void {
     $dirty = 'http-equiv=refresh url=http://example.com';
 
