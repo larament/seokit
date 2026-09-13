@@ -14,7 +14,7 @@ final class SeoKitServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/seokit.php', 'seokit');
 
-        $this->app->singleton(SeoKitManager::class, fn (): SeoKitManager => new SeoKitManager(
+        $this->app->scoped(SeoKitManager::class, fn (): SeoKitManager => new SeoKitManager(
             new MetaTags,
             new OpenGraph,
             new TwitterCards,
@@ -53,6 +53,9 @@ final class SeoKitServiceProvider extends ServiceProvider
 
     private function registerBladeDirective(): void
     {
-        Blade::directive('seoKit', fn (bool $minify = false): string => "<?php echo \Larament\SeoKit\Facades\SeoKit::toHtml($minify); ?>");
+        Blade::directive('seoKit', fn (?string $expression = null): string => sprintf(
+            '<?php echo \Larament\SeoKit\Facades\SeoKit::toHtml(%s); ?>',
+            empty($expression) ? 'false' : $expression
+        ));
     }
 }
