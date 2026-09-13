@@ -9,7 +9,8 @@ it('can set and get a title', function (): void {
     $meta->title('Test Title');
 
     $html = $meta->toHtml();
-    expect($html)->toContain('<title>Test Title</title>');
+    expect($html)->toContain('<title>Test Title</title>')
+        ->and($meta->getTitle())->toBe('Test Title');
 });
 
 it('can add and retrieve meta tags', function (): void {

@@ -15,7 +15,9 @@ final readonly class SeoData
         public string $og_title = '',
         public string $og_description = '',
         public string $og_image = '',
+        public ?string $og_image_disk = null,
         public ?string $twitter_image = null,
+        public ?string $twitter_image_disk = null,
         public ?array $structured_data = null,
     ) {}
 
@@ -30,7 +32,9 @@ final readonly class SeoData
             $data['og_title'] ?? '',
             $data['og_description'] ?? '',
             $data['og_image'] ?? '',
+            $data['og_image_disk'] ?? null,
             $data['twitter_image'] ?? null,
+            $data['twitter_image_disk'] ?? null,
             $data['structured_data'] ?? null,
         );
     }

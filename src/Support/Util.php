@@ -6,9 +6,12 @@ namespace Larament\SeoKit\Support;
 
 use Closure;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
+use Larament\SeoKit\Exceptions\InvalidImageUrlException;
 
 final class Util
 {
@@ -30,7 +33,7 @@ final class Util
     /**
      * Get the title from the URL.
      */
-    public static function getTitleFromUrl(): ?string
+    public static function getTitleFromUrl(): string
     {
         $path = Request::path();
 
@@ -79,5 +82,35 @@ final class Util
             // @phpstan-ignore-next-line
             fn (string|Closure $middleware): bool => ! $middleware instanceof Closure && is_subclass_of($middleware, Middleware::class)
         );
+    }
+
+    /**
+     * Resolve the image path or URL into a fully-qualified absolute URL.
+     */
+    public static function resolveImageUrl(?string $path, ?string $disk = null): ?string
+    {
+        if (blank($path)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (filled($disk)) {
+            $url = Storage::disk($disk)->url($path);
+
+            return str_starts_with($url, 'http://') || str_starts_with($url, 'https://')
+                ? $url
+                : url($url);
+        }
+
+        if (app()->isProduction()) {
+            Log::error(sprintf('The image path [%s] cannot be resolved because no storage disk was specified.', $path));
+
+            return null;
+        }
+
+        throw InvalidImageUrlException::missingDisk($path);
     }
 }

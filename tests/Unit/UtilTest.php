@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Larament\SeoKit\Exceptions\InvalidImageUrlException;
 use Larament\SeoKit\Support\Util;
 use Larament\SeoKit\Tests\Fixtures\Http\Middleware\DummyInertiaMiddleware;
 
@@ -207,4 +210,59 @@ it('handles closure in route middleware', function (): void {
         ]);
 
     expect(Util::isInertiaRoute())->toBeFalse();
+});
+
+it('returns null when image is null or empty', function (): void {
+    expect(Util::resolveImageUrl(null))->toBeNull()
+        ->and(Util::resolveImageUrl(''))->toBeNull()
+        ->and(Util::resolveImageUrl('   '))->toBeNull();
+});
+
+it('returns external URLs unchanged', function (): void {
+    expect(Util::resolveImageUrl('https://example.com/image.jpg'))->toBe('https://example.com/image.jpg')
+        ->and(Util::resolveImageUrl('http://example.com/image.png'))->toBe('http://example.com/image.png');
+});
+
+it('throws an exception for relative path when disk is not specified in non-production', function (): void {
+    expect(fn () => Util::resolveImageUrl('covers/og.jpg'))
+        ->toThrow(InvalidImageUrlException::class, 'The image path [covers/og.jpg] cannot be resolved because no storage disk was specified.');
+});
+
+it('logs an error and returns null for relative path when disk is not specified in production', function (): void {
+    $this->app->detectEnvironment(fn () => 'production');
+    Log::shouldReceive('error')
+        ->once()
+        ->with('The image path [covers/og.jpg] cannot be resolved because no storage disk was specified.');
+
+    $url = Util::resolveImageUrl('covers/og.jpg');
+
+    expect($url)->toBeNull();
+});
+
+it('resolves relative path using explicit disk', function (): void {
+    Storage::fake('s3');
+
+    $url = Util::resolveImageUrl('covers/og.jpg', 's3');
+
+    expect($url)->toContain('covers/og.jpg');
+});
+
+it('ensures storage url is absolute when disk returns relative url', function (): void {
+    Storage::fake('public');
+
+    $url = Util::resolveImageUrl('seo/banner.png', 'public');
+
+    expect($url)->toBe(url('/storage/seo/banner.png'));
+});
+
+it('returns storage url unchanged when disk returns an absolute url', function (): void {
+    config(['filesystems.disks.custom' => [
+        'driver' => 'local',
+        'root' => storage_path('app'),
+        'url' => 'https://cdn.example.com/assets',
+    ]]);
+
+    $url = Util::resolveImageUrl('banner.png', 'custom');
+
+    expect($url)->toBe('https://cdn.example.com/assets/banner.png');
 });

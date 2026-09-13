@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Larament\SeoKit\Concerns\HasSeo;
 use Larament\SeoKit\Data\SeoData;
 use Larament\SeoKit\Facades\SeoKit;
@@ -358,4 +359,25 @@ it('prepares seo tags with complex data', function (): void {
         ->and($html)->toContain('OG Title')
         ->and($html)->toContain('https://example.com/image.jpg')
         ->and($html)->toContain('Article Headline');
+});
+
+it('prepares seo tags with disk-aware image from database', function (): void {
+    Storage::fake('public');
+
+    $post = $this->testModel->create(['title' => 'Test Post']);
+
+    $post->seo()->create([
+        'title' => 'Disk Test SEO',
+        'og_image' => 'posts/cover.png',
+        'og_image_disk' => 'public',
+    ]);
+
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    $expectedUrl = url('/storage/posts/cover.png');
+
+    expect($html)->toContain(sprintf('property="og:image" content="%s"', $expectedUrl))
+        ->and($html)->toContain(sprintf('name="twitter:image" content="%s"', $expectedUrl));
 });

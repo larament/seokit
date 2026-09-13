@@ -67,15 +67,26 @@ final class SeoKitManager
         $this->opengraph
             ->title($data->og_title ?: $data->title)
             ->description($data->og_description ?: $data->description);
-        if ($data->og_image) {
-            $this->opengraph->image($data->og_image);
+
+        if (
+            $data->og_image &&
+            $ogImage = Util::resolveImageUrl($data->og_image, $data->og_image_disk)
+        ) {
+            $this->opengraph->image($ogImage);
         }
 
         $this->twitter
             ->title($data->og_title ?: $data->title)
             ->description($data->og_description ?: $data->description);
-        if ($twImage = $data->twitter_image ?? $data->og_image) {
-            $this->twitter->image($twImage);
+
+        $twImage = $data->twitter_image ?? $data->og_image;
+        $twDisk = $data->twitter_image ? $data->twitter_image_disk : $data->og_image_disk;
+
+        if (
+            $twImage &&
+            $resolvedTwImage = Util::resolveImageUrl($twImage, $twDisk)
+        ) {
+            $this->twitter->image($resolvedTwImage);
         }
 
         if ($data->structured_data) {
@@ -163,11 +174,11 @@ final class SeoKitManager
         $meta = config('seokit.defaults');
         $this->meta->title(config('seokit.auto_title_from_url') ? Util::getTitleFromUrl() : $meta['title']);
 
-        if ($meta['description']) {
+        if ($meta['description'] !== null) {
             $this->meta->description($meta['description']);
         }
 
-        if ($meta['robots']) {
+        if ($meta['robots'] !== null) {
             $this->meta->robots($meta['robots']);
         }
 

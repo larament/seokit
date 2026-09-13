@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Larament\SeoKit\Data\SeoData;
+use Larament\SeoKit\Exceptions\InvalidImageUrlException;
 use Larament\SeoKit\Facades\SeoKit;
 use Larament\SeoKit\JsonLD;
 use Larament\SeoKit\MetaTags;
@@ -109,6 +112,7 @@ it('can set SEO data from SeoData object', function (): void {
     $seoData = new SeoData(
         title: 'SEO Title',
         description: 'SEO Description',
+        keywords: 'laravel, seo, package',
         canonical: 'https://example.com/canonical',
         og_title: 'OG Title',
         og_description: 'OG Description',
@@ -130,6 +134,7 @@ it('can set SEO data from SeoData object', function (): void {
     expect($metaHtml)
         ->toContain('<title>SEO Title</title>')
         ->toContain('content="SEO Description"')
+        ->toContain('content="laravel, seo, package"')
         ->toContain('href="https://example.com/canonical"');
 
     expect($ogHtml)
@@ -413,4 +418,71 @@ it('blade directive accepts minify parameter', function (): void {
     $blade = Blade::compileString('@seoKit(true)');
 
     expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(1)');
+});
+
+it('resolves images from SeoData with disk', function (): void {
+    Storage::fake('public');
+
+    $seoData = new SeoData(
+        title: 'Post Title',
+        og_image: 'og.png',
+        og_image_disk: 'public',
+        twitter_image: 'tw.png',
+        twitter_image_disk: 'public',
+    );
+
+    SeoKit::fromSeoData($seoData);
+
+    $ogHtml = SeoKit::opengraph()->toHtml();
+    $twitterHtml = SeoKit::twitter()->toHtml();
+
+    expect($ogHtml)->toContain(sprintf('property="og:image" content="%s"', url('/storage/og.png')))
+        ->and($twitterHtml)->toContain(sprintf('name="twitter:image" content="%s"', url('/storage/tw.png')));
+});
+
+it('resolves twitter image falling back to og_image_disk when twitter_image_disk is null', function (): void {
+    Storage::fake('s3');
+
+    $seoData = new SeoData(
+        title: 'Post Title',
+        og_image: 'shared.png',
+        og_image_disk: 's3',
+    );
+
+    SeoKit::fromSeoData($seoData);
+
+    $twitterHtml = SeoKit::twitter()->toHtml();
+
+    expect($twitterHtml)->toContain('name="twitter:image"')
+        ->and($twitterHtml)->toContain('shared.png');
+});
+
+it('throws exception when relative image has no disk in non-production', function (): void {
+    $seoData = new SeoData(
+        title: 'Post Title',
+        og_image: 'no-disk.png',
+        og_image_disk: null,
+    );
+
+    expect(fn () => SeoKit::fromSeoData($seoData))
+        ->toThrow(InvalidImageUrlException::class);
+});
+
+it('does not set og_image or twitter_image and logs error when relative image has no disk in production', function (): void {
+    $this->app->detectEnvironment(fn () => 'production');
+    Log::shouldReceive('error')->twice();
+
+    $seoData = new SeoData(
+        title: 'Post Title',
+        og_image: 'no-disk.png',
+        og_image_disk: null,
+    );
+
+    SeoKit::fromSeoData($seoData);
+
+    $ogHtml = SeoKit::opengraph()->toHtml();
+    $twitterHtml = SeoKit::twitter()->toHtml();
+
+    expect($ogHtml)->not->toContain('property="og:image"')
+        ->and($twitterHtml)->not->toContain('name="twitter:image"');
 });

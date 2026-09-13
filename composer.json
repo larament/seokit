@@ -61,10 +61,10 @@
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest --parallel",
-        "test-coverage": "vendor/bin/pest --coverage --parallel --compact --min=95",
-        "format": "vendor/bin/pint"
+        "analyse": "phpstan analyse",
+        "test": "pest --parallel",
+        "test:coverage": "pest --coverage --parallel --compact --min=95",
+        "lint": "pint --parallel"
     },
     "config": {
         "sort-packages": true,

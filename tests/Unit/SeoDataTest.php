@@ -182,3 +182,33 @@ it('structured_data can be complex nested array', function (): void {
         ->and($seoData->structured_data['author']['name'])->toBe('John Doe')
         ->and($seoData->structured_data['publisher']['logo']['url'])->toBe('https://example.com/logo.png');
 });
+
+it('can be created with disk fields', function (): void {
+    $seoData = new SeoData(
+        og_image: 'covers/image.jpg',
+        og_image_disk: 's3',
+        twitter_image: 'covers/twitter.jpg',
+        twitter_image_disk: 'custom'
+    );
+
+    expect($seoData->og_image)->toBe('covers/image.jpg')
+        ->and($seoData->og_image_disk)->toBe('s3')
+        ->and($seoData->twitter_image)->toBe('covers/twitter.jpg')
+        ->and($seoData->twitter_image_disk)->toBe('custom');
+});
+
+it('can be created from array with disk fields', function (): void {
+    $data = [
+        'og_image' => 'covers/image.jpg',
+        'og_image_disk' => 's3',
+        'twitter_image' => 'covers/twitter.jpg',
+        'twitter_image_disk' => 'public',
+    ];
+
+    $seoData = SeoData::fromArray($data);
+
+    expect($seoData->og_image)->toBe('covers/image.jpg')
+        ->and($seoData->og_image_disk)->toBe('s3')
+        ->and($seoData->twitter_image)->toBe('covers/twitter.jpg')
+        ->and($seoData->twitter_image_disk)->toBe('public');
+});
