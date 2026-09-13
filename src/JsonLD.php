@@ -186,7 +186,7 @@ final class JsonLD
         foreach ($this->schemas as $schema) {
             $output[] = sprintf(
                 '<script type="application/ld+json">%s</script>',
-                json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)
+                json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_THROW_ON_ERROR)
             );
         }
 

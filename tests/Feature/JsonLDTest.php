@@ -211,8 +211,20 @@ it('properly handles special characters in JSON', function (): void {
     ]);
 
     $html = $jsonld->toHtml();
-    // JSON should properly escape these
-    expect($html)->toContain('"name":"Test & Site with \\"Quotes\\" and <HTML>"');
+    // JSON should properly escape these and hex-encode tags for script safety
+    expect($html)->toContain('"name":"Test & Site with \\"Quotes\\" and \u003CHTML\u003E"');
+});
+
+it('escapes script tags in JSON-LD to prevent XSS breakout', function (): void {
+    $jsonld = SeoKit::jsonld();
+    $jsonld->add([
+        '@type' => 'WebSite',
+        'description' => '</script><script>alert("xss")</script>',
+    ]);
+
+    $html = $jsonld->toHtml();
+    expect($html)->not->toContain('</script><script>')
+        ->toContain('\u003C/script\u003E\u003Cscript\u003E');
 });
 
 it('handles UTF-8 characters correctly', function (): void {
