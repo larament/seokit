@@ -55,7 +55,10 @@ final class SeoKitManager
             ->description($data->description);
 
         if ($data->keywords) {
-            $this->meta->keywords(explode(', ', $data->keywords));
+            $keywords = preg_split('/\s*,\s*/', trim($data->keywords), -1, PREG_SPLIT_NO_EMPTY);
+            if (! empty($keywords)) {
+                $this->meta->keywords($keywords);
+            }
         }
         if ($data->robots) {
             $this->meta->robots($data->robots);
@@ -196,17 +199,21 @@ final class SeoKitManager
     private function setDefaultOpenGraph(): void
     {
         $opengraph = config('seokit.opengraph.defaults');
+        $siteName = $opengraph['site_name'] ?? config('app.name', 'Laravel');
+
         $this->opengraph
             ->type($opengraph['type'])
-            ->siteName($opengraph['site_name'])
             ->locale($opengraph['locale']);
+
+        if ($siteName) {
+            $this->opengraph->siteName((string) $siteName);
+        }
 
         match ($opengraph['url'] ?? null) {
             null => $this->opengraph->url(URL::current()),
             'full' => $this->opengraph->url(URL::full()),
             default => null,
         };
-
     }
 
     /**

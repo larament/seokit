@@ -212,13 +212,19 @@ it('properly handles special characters across all services', function (): void 
     $ogHtml = SeoKit::opengraph()->toHtml();
     $twitterHtml = SeoKit::twitter()->toHtml();
 
-    expect($metaHtml)->toContain('Title with &amp; &quot;Quotes&quot; and &lt;HTML&gt;')
+    expect($metaHtml)->toContain('Title with &amp; &quot;Quotes&quot; and ')
+        ->not->toContain('<HTML>')
+        ->not->toContain('&lt;HTML&gt;')
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 
-    expect($ogHtml)->toContain('Title with &amp; &quot;Quotes&quot; and &lt;HTML&gt;')
+    expect($ogHtml)->toContain('Title with &amp; &quot;Quotes&quot; and ')
+        ->not->toContain('<HTML>')
+        ->not->toContain('&lt;HTML&gt;')
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 
-    expect($twitterHtml)->toContain('Title with &amp; &quot;Quotes&quot; and &lt;HTML&gt;')
+    expect($twitterHtml)->toContain('Title with &amp; &quot;Quotes&quot; and ')
+        ->not->toContain('<HTML>')
+        ->not->toContain('&lt;HTML&gt;')
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
@@ -292,6 +298,28 @@ it('handles SeoData with minimal required fields', function (): void {
     expect($html)->toContain('<title>Minimal Title</title>')
         ->toContain('name="description" content="Minimal Description"')
         ->toBeString();
+});
+
+it('correctly parses keywords with various comma spacing', function (): void {
+    $seoData = new SeoData(
+        keywords: 'laravel,seo, tools , php, '
+    );
+
+    SeoKit::fromSeoData($seoData);
+
+    $metaHtml = SeoKit::meta()->toHtml();
+    expect($metaHtml)->toContain('name="keywords" content="laravel, seo, tools, php"');
+});
+
+it('ignores empty or whitespace-only keywords in SeoData', function (): void {
+    $seoData = new SeoData(
+        keywords: '  ,  ,  '
+    );
+
+    SeoKit::fromSeoData($seoData);
+
+    $metaHtml = SeoKit::meta()->toHtml();
+    expect($metaHtml)->not->toContain('name="keywords"');
 });
 
 it('can override SeoData values after setting', function (): void {
@@ -415,9 +443,13 @@ it('blade directive renders seo tags', function (): void {
 });
 
 it('blade directive accepts minify parameter', function (): void {
-    $blade = Blade::compileString('@seoKit(true)');
+    $bladeTrue = Blade::compileString('@seoKit(true)');
+    $bladeFalse = Blade::compileString('@seoKit(false)');
+    $bladeVar = Blade::compileString('@seoKit($minify)');
 
-    expect($blade)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(1)');
+    expect($bladeTrue)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(true)')
+        ->and($bladeFalse)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml(false)')
+        ->and($bladeVar)->toContain('\Larament\SeoKit\Facades\SeoKit::toHtml($minify)');
 });
 
 it('resolves images from SeoData with disk', function (): void {
