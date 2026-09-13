@@ -56,7 +56,7 @@ final class Util
      */
     public static function cleanString(string $string): string
     {
-        return strip_tags(e(
+        return e(strip_tags(
             str_replace(['http-equiv=', 'url='], '', $string)
         ));
     }
