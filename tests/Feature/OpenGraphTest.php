@@ -294,7 +294,9 @@ it('properly escapes special characters in content', function (): void {
     $og->description('Description with special chars: & < > " \'');
 
     $html = $og->toHtml();
-    expect($html)->toContain('Title with &amp; &quot;Quotes&quot; and &lt;HTML&gt;')
+    expect($html)->toContain('Title with &amp; &quot;Quotes&quot; and ')
+        ->not->toContain('<HTML>')
+        ->not->toContain('&lt;HTML&gt;')
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 

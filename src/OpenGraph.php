@@ -492,7 +492,8 @@ final class OpenGraph
         foreach ($this->properties as $property => $values) {
             $values = is_array($values) ? $values : [$values];
             foreach ($values as $value) {
-                $output[] = sprintf('<meta property="%s" content="%s" />', $property, Util::cleanString((string) $value));
+                $content = $property === 'og:title' ? Util::cleanString((string) $value) : e((string) $value);
+                $output[] = sprintf('<meta property="%s" content="%s" />', $property, $content);
             }
         }
 
@@ -500,7 +501,7 @@ final class OpenGraph
         foreach ($this->images as $image) {
             foreach ($image as $property => $value) {
                 if ($value) {
-                    $output[] = sprintf('<meta property="%s" content="%s" />', $property, Util::cleanString((string) $value));
+                    $output[] = sprintf('<meta property="%s" content="%s" />', $property, e((string) $value));
                 }
             }
         }
@@ -509,7 +510,7 @@ final class OpenGraph
         foreach ($this->videos as $video) {
             foreach ($video as $property => $value) {
                 if (! empty($value)) {
-                    $output[] = sprintf('<meta property="%s" content="%s" />', $property, Util::cleanString((string) $value));
+                    $output[] = sprintf('<meta property="%s" content="%s" />', $property, e((string) $value));
                 }
             }
         }
@@ -518,7 +519,7 @@ final class OpenGraph
         foreach ($this->audios as $audio) {
             foreach ($audio as $property => $value) {
                 if (! empty($value)) {
-                    $output[] = sprintf('<meta property="%s" content="%s" />', $property, Util::cleanString((string) $value));
+                    $output[] = sprintf('<meta property="%s" content="%s" />', $property, e((string) $value));
                 }
             }
         }
