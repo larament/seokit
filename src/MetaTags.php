@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Larament\SeoKit;
 
+use Larament\SeoKit\Enums\MetaRobots;
 use Larament\SeoKit\Support\Util;
 
 final class MetaTags
@@ -123,10 +124,21 @@ final class MetaTags
      * - `noarchive`
      * - `noimageindex`
      * - `nosnippet`
+     *
+     * @param  string|array<string|MetaRobots>|MetaRobots  $robots
      */
-    public function robots(string|array $robots): self
+    public function robots(string|array|MetaRobots $robots): self
     {
-        return $this->addMeta('robots', is_array($robots) ? implode(', ', $robots) : $robots);
+        if ($robots instanceof MetaRobots) {
+            $robots = $robots->value;
+        } elseif (is_array($robots)) {
+            $robots = implode(', ', array_map(
+                static fn (string|MetaRobots $robot): string => $robot instanceof MetaRobots ? $robot->value : $robot,
+                $robots
+            ));
+        }
+
+        return $this->addMeta('robots', $robots);
     }
 
     /**

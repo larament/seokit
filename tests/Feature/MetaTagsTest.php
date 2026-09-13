@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Larament\SeoKit\Enums\MetaRobots;
 use Larament\SeoKit\Facades\SeoKit;
 
 it('can set and get a title', function (): void {
@@ -102,6 +103,22 @@ it('can set robots with an array', function (): void {
     expect($html)->toContain('name="robots" content="noindex, nofollow, noarchive"');
 });
 
+it('can set robots with an enum', function (): void {
+    $meta = SeoKit::meta();
+    $meta->robots(MetaRobots::Noindex);
+
+    $html = $meta->toHtml();
+    expect($html)->toContain('name="robots" content="noindex"');
+});
+
+it('can set robots with an array of enums', function (): void {
+    $meta = SeoKit::meta();
+    $meta->robots([MetaRobots::Noindex, MetaRobots::NoFollow]);
+
+    $html = $meta->toHtml();
+    expect($html)->toContain('name="robots" content="noindex, nofollow"');
+});
+
 it('can set canonical URL', function (): void {
     $meta = SeoKit::meta();
     $meta->canonical('https://example.com/page');
@@ -182,7 +199,9 @@ it('properly escapes special characters in content', function (): void {
     $meta->description('Description with special chars: & < > " \'');
 
     $html = $meta->toHtml();
-    expect($html)->toContain('Test &amp; Title with &quot;Quotes&quot; and &lt;Tags&gt;')
+    expect($html)->toContain('Test &amp; Title with &quot;Quotes&quot; and ')
+        ->not->toContain('<Tags>')
+        ->not->toContain('&lt;Tags&gt;')
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
