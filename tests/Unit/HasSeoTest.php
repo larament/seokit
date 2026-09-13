@@ -381,3 +381,35 @@ it('prepares seo tags with disk-aware image from database', function (): void {
     expect($html)->toContain(sprintf('property="og:image" content="%s"', $expectedUrl))
         ->and($html)->toContain(sprintf('name="twitter:image" content="%s"', $expectedUrl));
 });
+
+it('does not delete seo relation on soft delete but deletes on force delete', function (): void {
+    Schema::create('test_soft_posts', function (Blueprint $table): void {
+        $table->id();
+        $table->string('title');
+        $table->softDeletes();
+        $table->timestamps();
+    });
+
+    $softModel = new class extends Model
+    {
+        use HasSeo, Illuminate\Database\Eloquent\SoftDeletes;
+
+        protected $table = 'test_soft_posts';
+
+        protected $guarded = [];
+    };
+
+    $post = $softModel->create(['title' => 'Soft Delete Post']);
+    $seo = $post->seo()->create(['title' => 'SEO Record']);
+
+    $post->delete();
+
+    expect($seo->fresh())->not->toBeNull()
+        ->and(Cache::has(Util::modelCacheKey($post)))->toBeFalse();
+
+    $post->forceDelete();
+
+    expect($seo->fresh())->toBeNull();
+
+    Schema::dropIfExists('test_soft_posts');
+});
