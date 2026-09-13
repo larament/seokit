@@ -48,6 +48,16 @@ it('can set the creator username', function (): void {
     expect($html)->toContain('name="twitter:creator" content="@creator"');
 });
 
+it('automatically prefixes site and creator with @ if omitted', function (): void {
+    $twitter = SeoKit::twitter();
+    $twitter->site('example');
+    $twitter->creator('creator');
+
+    $html = $twitter->toHtml();
+    expect($html)->toContain('name="twitter:site" content="@example"')
+        ->toContain('name="twitter:creator" content="@creator"');
+});
+
 it('can set the description', function (): void {
     $twitter = SeoKit::twitter();
     $twitter->description('Test Description');
@@ -143,7 +153,9 @@ it('properly escapes special characters in content', function (): void {
     $twitter->description('Description with special chars: & < > " \'');
 
     $html = $twitter->toHtml();
-    expect($html)->toContain('Title with &amp; &quot;Quotes&quot; and &lt;HTML&gt;')
+    expect($html)->toContain('Title with &amp; &quot;Quotes&quot; and ')
+        ->not->toContain('<HTML>')
+        ->not->toContain('&lt;HTML&gt;')
         ->toContain('Description with special chars: &amp; &lt; &gt; &quot; &#039;');
 });
 
@@ -184,8 +196,7 @@ it('adds @ prefix to site username if missing', function (): void {
     $twitter->site('example'); // Without @ prefix
 
     $array = $twitter->toArray();
-    // Should either add @ or accept as-is
-    expect($array)->toHaveKey('site');
+    expect($array['site'])->toBe('@example');
 });
 
 it('adds @ prefix to creator username if missing', function (): void {
@@ -193,8 +204,7 @@ it('adds @ prefix to creator username if missing', function (): void {
     $twitter->creator('creator'); // Without @ prefix
 
     $array = $twitter->toArray();
-    // Should either add @ or accept as-is
-    expect($array)->toHaveKey('creator');
+    expect($array['creator'])->toBe('@creator');
 });
 
 it('can clear all properties', function (): void {

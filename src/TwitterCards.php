@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Larament\SeoKit;
 
+use Illuminate\Support\Str;
+use Larament\SeoKit\Support\Util;
+
 final class TwitterCards
 {
     private array $properties = [];
 
     public function add(string $property, string|int $value): self
     {
-        $this->properties[$property] = e($value);
+        $this->properties[$property] = e($value, false);
 
         return $this;
     }
@@ -24,7 +27,7 @@ final class TwitterCards
 
     public function title(string $title): self
     {
-        return $this->add('title', $title);
+        return $this->add('title', Util::cleanString($title));
     }
 
     public function card(string $card): self
@@ -40,12 +43,12 @@ final class TwitterCards
 
     public function site(string $username): self
     {
-        return $this->add('site', $username);
+        return $this->add('site', Str::start($username, '@'));
     }
 
     public function creator(string $username): self
     {
-        return $this->add('creator', $username);
+        return $this->add('creator', Str::start($username, '@'));
     }
 
     public function description(string $description): self
