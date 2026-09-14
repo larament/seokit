@@ -2,6 +2,24 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.7.0 - 2026-09-14
+
+### v1.7.0 - 2026-09-14
+
+#### What's Changed
+
+##### 🚀 Added
+
+* **Default Image Storage Disk Configuration**: Added a `'disk'` configuration option in `config/seokit.php` (supporting the `SEOKIT_DISK` environment variable). When `null`, it seamlessly inherits the host application's default filesystem disk (`config('filesystems.default')`).
+* **Automatic Model Persistence Hook**: Relative image paths saved on the `Seo` model (`$post->seo()->create([...])`) now automatically persist the configured default disk to `og_image_disk` and `twitter_image_disk`, eliminating the need to specify the disk on every record creation while preserving explicit overrides.
+* **Automatic Disk Cleanup**: Updating an image to an external URL (`https://...`) or removing it automatically resets the corresponding disk column to `null`, ensuring the database never retains stale storage metadata.
+
+##### 🛠️ Enhanced
+
+* **Streamlined URL Detection**: Replaced custom URL prefix checks with Laravel's `Str::isUrl()` across image resolution and persistence hooks.
+
+**Full Changelog**: https://github.com/larament/seokit/compare/v1.6.0...v1.7.0
+
 ## v1.6.0 - 2026-09-14
 
 ### What's Changed
