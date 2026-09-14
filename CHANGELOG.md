@@ -2,6 +2,35 @@
 
 All notable changes to `seokit` will be documented in this file.
 
+## v1.6.0 - 2026-09-14
+
+### What's Changed
+
+#### 🚀 Added
+
+* **Dedicated Documentation Website**: Built a modern, markdown-driven documentation website using VitePress, deployed automatically via Bun to GitHub Pages.
+* **Storage Disk Resolution for Images**: Added support for `og_image_disk` and `twitter_image_disk` in migrations, models, and `SeoData`, automatically resolving absolute image URLs across local, public, and S3 storage disks.
+* **Typed `MetaRobots` Enum**: `MetaTags::robots()` now accepts instances and arrays of the `MetaRobots` enum in addition to strings.
+* **Laravel Octane & FrankenPHP Compatibility**: Scoped `SeoKitManager` within the container to ensure request isolation and prevent cross-request metadata leakage in persistent worker environments.
+* **Dynamic Blade Directive**: `@seoKit` now compiles expressions dynamically, enabling runtime minification checks (e.g. `@seoKit(app()->isProduction())`).
+
+#### 🛠️ Fixed
+
+* **JSON-LD Script Breakout**: Added `JSON_HEX_TAG` when encoding structured data to prevent XSS / script breakout attacks.
+* **Soft Delete Safety**: Preserved polymorphic `seo` relationship records when the parent model is soft-deleted; records are now only pruned on force-delete.
+* **Cache Invalidation Null Safety**: Added model existence guards before purging cache keys during SEO record deletion.
+* **Twitter Card Attributes**: Enforced automatic `@` handle prefixing and prevented double-encoding of Twitter metadata.
+* **Open Graph Escaping**: Fixed attribute escaping and ensured non-title content tags are not prematurely stripped.
+* **String Cleaning**: Corrected tag stripping order in `Util::cleanString` (`e(strip_tags(...))`).
+* **Keyword Parsing**: Improved whitespace trimming and comma-separated keyword extraction in `fromSeoData()`.
+
+#### 🧹 Chores & Maintenance
+
+* Redesigned package SVG cover graphic.
+* Bumped CI dependencies (`actions/checkout` to v7, `codecov/codecov-action` to v7).
+
+**Full Changelog**: https://github.com/larament/seokit/compare/v1.5.0...v1.6.0
+
 ## v1.5.0 - 2026-05-19
 
 ### What's Changed
