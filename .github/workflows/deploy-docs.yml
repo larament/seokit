@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
-      - 'package.json'
-      - 'bun.lock'
-      - '.github/workflows/deploy-docs.yml'
+      - "docs/**"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/deploy-docs.yml"
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -59,4 +59,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
