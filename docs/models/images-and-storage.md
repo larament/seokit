@@ -18,9 +18,30 @@ SeoKit::image('https://cdn.example.com/assets/banner.png');
 
 ### 2. Storage Disks (e.g., `public`, `s3`, `r2`)
 
-When storing images in Laravel's filesystem disks (such as `Storage::disk('s3')` or `Storage::disk('public')`), you specify the relative file path along with the disk name.
+When storing images in Laravel's filesystem disks (such as `Storage::disk('s3')` or `Storage::disk('public')`), you can specify the relative file path.
 
-#### In the `Seo` Model / Database
+#### Default Storage Disk
+
+SeoKit includes a `'disk'` configuration option in `config/seokit.php` (defaults to `env('SEOKIT_DISK')`):
+
+```php
+'disk' => env('SEOKIT_DISK'),
+```
+
+When `'disk'` is `null`, SeoKit inherits the application's default filesystem disk (`config('filesystems.default')`).
+
+When creating or updating an `Seo` record with a relative path, SeoKit **automatically assigns and persists** this default disk to `og_image_disk` and `twitter_image_disk` if no explicit disk is provided:
+
+```php
+// Automatically persists 'og_image_disk' using the application default disk:
+$post->seo()->create([
+    'og_image' => 'posts/covers/september-release.jpg',
+]);
+```
+
+#### Custom Disk Overrides
+
+You can still explicitly specify a custom disk whenever an asset is stored on a different disk:
 
 ```php
 $post->seo()->updateOrCreate([], [
@@ -44,6 +65,7 @@ return new SeoData(
 ```
 
 SeoKit invokes `Storage::disk($disk)->url($path)` and ensures the final URL is absolute.
+
 
 ---
 

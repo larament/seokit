@@ -7,6 +7,7 @@ namespace Larament\SeoKit\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Larament\SeoKit\Support\Util;
 
 /**
@@ -42,6 +43,22 @@ final class Seo extends Model
 
     protected static function booted(): void
     {
+        self::saving(function (Seo $seo): void {
+            $defaultDisk = config('seokit.disk') ?? config('filesystems.default');
+
+            if (blank($seo->og_image) || Str::isUrl($seo->og_image)) {
+                $seo->og_image_disk = null;
+            } elseif (blank($seo->og_image_disk)) {
+                $seo->og_image_disk = $defaultDisk;
+            }
+
+            if (blank($seo->twitter_image) || Str::isUrl($seo->twitter_image)) {
+                $seo->twitter_image_disk = null;
+            } elseif (blank($seo->twitter_image_disk)) {
+                $seo->twitter_image_disk = $defaultDisk;
+            }
+        });
+
         self::saved(function (Seo $seo): void {
             if ($seo->model) {
                 Cache::forget(Util::modelCacheKey($seo->model));

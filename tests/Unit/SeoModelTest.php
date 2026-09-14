@@ -165,3 +165,159 @@ it('clears model cache when attached seo record is deleted', function (): void {
 
     expect(Cache::has($cacheKey))->toBeFalse();
 });
+
+it('auto-assigns configured default disk when saving relative og_image without disk', function (): void {
+    config(['seokit.disk' => 'public']);
+
+    $seo = Seo::create([
+        'title' => 'Default Disk Test',
+        'model_type' => Seo::class,
+        'model_id' => 10,
+        'og_image' => 'covers/test.jpg',
+    ]);
+
+    expect($seo->og_image_disk)->toBe('public')
+        ->and($seo->fresh()->og_image_disk)->toBe('public');
+});
+
+it('auto-assigns configured default disk when saving relative twitter_image without disk', function (): void {
+    config(['seokit.disk' => 'public']);
+
+    $seo = Seo::create([
+        'title' => 'Twitter Disk Test',
+        'model_type' => Seo::class,
+        'model_id' => 11,
+        'twitter_image' => 'twitter/card.jpg',
+    ]);
+
+    expect($seo->twitter_image_disk)->toBe('public')
+        ->and($seo->fresh()->twitter_image_disk)->toBe('public');
+});
+
+it('preserves explicit disk overrides when saving', function (): void {
+    config(['seokit.disk' => 'public']);
+
+    $seo = Seo::create([
+        'title' => 'Explicit Disk Test',
+        'model_type' => Seo::class,
+        'model_id' => 12,
+        'og_image' => 'covers/s3-image.jpg',
+        'og_image_disk' => 's3',
+        'twitter_image' => 'twitter/custom-disk.jpg',
+        'twitter_image_disk' => 'custom',
+    ]);
+
+    expect($seo->og_image_disk)->toBe('s3')
+        ->and($seo->twitter_image_disk)->toBe('custom')
+        ->and($seo->fresh()->og_image_disk)->toBe('s3')
+        ->and($seo->fresh()->twitter_image_disk)->toBe('custom');
+});
+
+it('leaves disk as null when saving external URLs', function (): void {
+    config(['seokit.disk' => 'public']);
+
+    $seo = Seo::create([
+        'title' => 'External URL Test',
+        'model_type' => Seo::class,
+        'model_id' => 13,
+        'og_image' => 'https://example.com/banner.jpg',
+        'twitter_image' => 'http://example.com/card.png',
+    ]);
+
+    expect($seo->og_image_disk)->toBeNull()
+        ->and($seo->twitter_image_disk)->toBeNull()
+        ->and($seo->fresh()->og_image_disk)->toBeNull()
+        ->and($seo->fresh()->twitter_image_disk)->toBeNull();
+});
+
+it('leaves disk as null when saving without image', function (): void {
+    config(['seokit.disk' => 'public']);
+
+    $seo = Seo::create([
+        'title' => 'No Image Test',
+        'model_type' => Seo::class,
+        'model_id' => 14,
+    ]);
+
+    expect($seo->og_image_disk)->toBeNull()
+        ->and($seo->twitter_image_disk)->toBeNull()
+        ->and($seo->fresh()->og_image_disk)->toBeNull()
+        ->and($seo->fresh()->twitter_image_disk)->toBeNull();
+});
+
+it('resets disk to null when updating to external URL or clearing image', function (): void {
+    config(['seokit.disk' => 'public']);
+
+    $seo = Seo::create([
+        'title' => 'Update Test',
+        'model_type' => Seo::class,
+        'model_id' => 14,
+        'og_image' => 'covers/relative.jpg',
+        'twitter_image' => 'twitter/relative.jpg',
+    ]);
+
+    expect($seo->og_image_disk)->toBe('public')
+        ->and($seo->twitter_image_disk)->toBe('public');
+
+    // Update og_image to external URL, clear twitter_image
+    $seo->update([
+        'og_image' => 'https://example.com/new-banner.jpg',
+        'twitter_image' => null,
+    ]);
+
+    expect($seo->og_image_disk)->toBeNull()
+        ->and($seo->twitter_image_disk)->toBeNull()
+        ->and($seo->fresh()->og_image_disk)->toBeNull()
+        ->and($seo->fresh()->twitter_image_disk)->toBeNull();
+});
+
+it('inherits application default filesystem when seokit.disk is null', function (): void {
+    config([
+        'seokit.disk' => null,
+        'filesystems.default' => 'custom-app-disk',
+    ]);
+
+    $seo = Seo::create([
+        'title' => 'Inherit App Disk Test',
+        'model_type' => Seo::class,
+        'model_id' => 15,
+        'og_image' => 'covers/inherited.jpg',
+    ]);
+
+    expect($seo->og_image_disk)->toBe('custom-app-disk')
+        ->and($seo->fresh()->og_image_disk)->toBe('custom-app-disk');
+});
+
+it('prioritizes seokit.disk over filesystems.default', function (): void {
+    config([
+        'seokit.disk' => 'custom-seo-disk',
+        'filesystems.default' => 'custom-app-disk',
+    ]);
+
+    $seo = Seo::create([
+        'title' => 'Priority Test',
+        'model_type' => Seo::class,
+        'model_id' => 16,
+        'og_image' => 'covers/priority.jpg',
+    ]);
+
+    expect($seo->og_image_disk)->toBe('custom-seo-disk')
+        ->and($seo->fresh()->og_image_disk)->toBe('custom-seo-disk');
+});
+
+it('does not assign disk if both seokit.disk and filesystems.default are null', function (): void {
+    config([
+        'seokit.disk' => null,
+        'filesystems.default' => null,
+    ]);
+
+    $seo = Seo::create([
+        'title' => 'Null Config Test',
+        'model_type' => Seo::class,
+        'model_id' => 17,
+        'og_image' => 'covers/unconfigured.jpg',
+    ]);
+
+    expect($seo->og_image_disk)->toBeNull()
+        ->and($seo->fresh()->og_image_disk)->toBeNull();
+});

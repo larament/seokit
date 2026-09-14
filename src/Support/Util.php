@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Middleware;
 use Larament\SeoKit\Exceptions\InvalidImageUrlException;
 
@@ -93,16 +94,14 @@ final class Util
             return null;
         }
 
-        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+        if (Str::isUrl($path)) {
             return $path;
         }
 
         if (filled($disk)) {
             $url = Storage::disk($disk)->url($path);
 
-            return str_starts_with($url, 'http://') || str_starts_with($url, 'https://')
-                ? $url
-                : url($url);
+            return Str::isUrl($url) ? $url : url($url);
         }
 
         if (app()->isProduction()) {

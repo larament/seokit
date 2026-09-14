@@ -382,6 +382,29 @@ it('prepares seo tags with disk-aware image from database', function (): void {
         ->and($html)->toContain(sprintf('name="twitter:image" content="%s"', $expectedUrl));
 });
 
+it('prepares seo tags with auto-assigned default disk when creating seo record without explicit disk', function (): void {
+    Storage::fake('public');
+    config(['seokit.disk' => 'public']);
+
+    $post = $this->testModel->create(['title' => 'Auto Disk Post']);
+
+    $seo = $post->seo()->create([
+        'title' => 'Auto Disk SEO',
+        'og_image' => 'posts/auto-disk.png',
+    ]);
+
+    expect($seo->og_image_disk)->toBe('public');
+
+    $post->prepareSeoTags();
+
+    $html = SeoKit::toHtml();
+
+    $expectedUrl = url('/storage/posts/auto-disk.png');
+
+    expect($html)->toContain(sprintf('property="og:image" content="%s"', $expectedUrl))
+        ->and($html)->toContain(sprintf('name="twitter:image" content="%s"', $expectedUrl));
+});
+
 it('does not delete seo relation on soft delete but deletes on force delete', function (): void {
     Schema::create('test_soft_posts', function (Blueprint $table): void {
         $table->id();

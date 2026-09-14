@@ -12,6 +12,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Image Storage Disk
+    |--------------------------------------------------------------------------
+    |
+    | The default filesystem disk to persist on the SEO record when saving
+    | relative image paths without an explicit disk specified.
+    |
+    | When null, it defaults to the application's default filesystem (filesystems.default).
+    |
+    */
+    'disk' => env('SEOKIT_DISK'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Auto Title From URL
     |--------------------------------------------------------------------------
     |
