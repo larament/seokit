@@ -18,3 +18,5 @@
 /UPGRADING.md       export-ignore
 /phpstan.neon.dist  export-ignore
 /phpstan-baseline.neon  export-ignore
+/package.json          export-ignore
+/package-lock.json     export-ignore

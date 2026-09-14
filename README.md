@@ -89,15 +89,32 @@ For model-driven SEO, SeoKit also provides `HasSeo` and `HasSeoData` traits.
 
 ## Documentation
 
-Detailed documentation lives in the GitHub wiki:
+Visit the official documentation website for complete guides, architecture details, and cookbook examples:
 
-- [Getting Started](../../wiki)
-- [Core Concepts](../../wiki/Core-Concepts)
-- [Advanced SEO Management](../../wiki/Advanced-SEO-Management)
-- [Database-Backed SEO](../../wiki/Database-Backed-SEO)
-- [Cookbooks and Examples](../../wiki/Cookbooks-and-Examples)
+👉 **[SeoKit Documentation](https://larament.github.io/seokit/)**
 
-The README is intentionally kept short. The wiki should be the source of truth for package guides, examples, and feature-specific documentation.
+- [Introduction & Architecture](docs/getting-started/introduction.md)
+- [Installation & Setup](docs/getting-started/installation.md)
+- [Configuration Reference](docs/getting-started/configuration.md)
+- [Meta Tags & Titles](docs/guide/meta-tags.md)
+- [Open Graph & Social Sharing](docs/guide/open-graph.md)
+- [Twitter Cards](docs/guide/twitter-cards.md)
+- [JSON-LD Structured Data](docs/guide/json-ld.md)
+- [Blade Directives](docs/guide/blade-directives.md)
+- [Database-Backed SEO (`HasSeo`)](docs/models/database-backed-seo.md)
+- [Computed SEO Data (`HasSeoData`)](docs/models/computed-seo.md)
+- [Images & Storage Disks](docs/models/images-and-storage.md)
+- [Macros & Extensions](docs/advanced/macros-and-customization.md)
+- [Caching & Performance](docs/advanced/caching.md)
+- [Laravel Octane Safety](docs/advanced/octane.md)
+
+To run the documentation website locally:
+
+```bash
+npm run docs:dev
+# or
+bun run docs:dev
+```
 
 ## Development
 

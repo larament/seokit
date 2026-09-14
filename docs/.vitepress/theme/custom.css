@@ -1,0 +1,46 @@
+/**
+ * SeoKit VitePress Custom Theme Styling
+ * Emerald & Slate Palette
+ */
+
+:root {
+  --vp-c-brand-1: #10b981;
+  --vp-c-brand-2: #059669;
+  --vp-c-brand-3: #047857;
+  --vp-c-brand-soft: rgba(16, 185, 129, 0.14);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #34d399 20%, #10b981 60%, #059669);
+  --vp-home-hero-image-filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.25));
+}
+
+.dark {
+  --vp-c-brand-1: #34d399;
+  --vp-c-brand-2: #10b981;
+  --vp-c-brand-3: #059669;
+  --vp-c-brand-soft: rgba(52, 211, 153, 0.16);
+
+  --vp-c-bg: #090f11;
+  --vp-c-bg-alt: #0e171a;
+  --vp-c-bg-elv: #132024;
+  --vp-c-bg-soft: #101c20;
+
+  --vp-c-default-soft: rgba(255, 255, 255, 0.05);
+}
+
+/* Polished code block aesthetics */
+.vp-doc div[class*='language-'] {
+  border-radius: 10px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* Feature cards polish */
+.VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+}
